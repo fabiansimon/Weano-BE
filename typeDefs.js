@@ -7,9 +7,18 @@ const typeDefs = gql`
     description: String
   }
 
+  type Trip {
+    id: ID
+    title: String
+    location: String
+    invitees: [String]!
+    startDate: Int
+    endDate: Int
+  }
+
   type Query {
     hello: String
-    getAllPosts: [Post]
+    getAllTrips: [Trip]
     getPost(id: ID): Post
   }
 
@@ -18,9 +27,19 @@ const typeDefs = gql`
     description: String
   }
 
+  input TripInput {
+    title: String
+    location: String
+    invitees: [String]!
+    startDate: Int
+    endDate: Int
+  }
+
   type Mutation {
+    createTrip(trip: TripInput): Trip
     createPost(post: PostInput): Post
-    deletePost(id: ID): String
+    deleteTrip(id: ID): String
+    deleteAllTrips: String
     updatePost(id: ID, post: PostInput): Post
   }
 `;

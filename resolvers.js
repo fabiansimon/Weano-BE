@@ -1,4 +1,5 @@
 import Post from "./models/Post.model.js";
+import Trip from "./models/Trip.model.js";
 
 const resolvers = {
   Query: {
@@ -6,8 +7,8 @@ const resolvers = {
       return "Hello World!";
     },
 
-    getAllPosts: async () => {
-      return await Post.find();
+    getAllTrips: async () => {
+      return await Trip.find();
     },
 
     getPost: async (_, { id }) => {
@@ -16,17 +17,22 @@ const resolvers = {
   },
 
   Mutation: {
-    createPost: async (_, args) => {
-      const { title, description } = args.post;
-      const post = new Post({ title, description });
+    createTrip: async (_, args) => {
+      const { title, location, invitees, startDate, endDate } = args.trip;
+      const trip = new Trip({ title, location, invitees, startDate, endDate });
 
-      await post.save();
-      return post;
+      await trip.save();
+      return trip;
     },
 
-    deletePost: async (_, { id }) => {
-      await Post.findByIdAndDelete(id);
-      return "Post successfully deleted";
+    deleteTrip: async (_, { id }) => {
+      await Trip.findByIdAndDelete(id);
+      return "Trip successfully deleted";
+    },
+
+    deleteAllTrips: async () => {
+      await Trip.deleteMany({});
+      return "Trips successfully deleted";
     },
 
     updatePost: async (_, args) => {
@@ -36,7 +42,7 @@ const resolvers = {
       const updates = {};
 
       if (title !== undefined) {
-        updates.title = title;
+        updates.title = title;4
       }
 
       if (description !== undefined) {
