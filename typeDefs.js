@@ -7,6 +7,12 @@ const typeDefs = gql`
     description: String
   }
 
+  type User {
+    id: ID
+    email: String
+    password: String
+  }
+
   type Trip {
     id: ID
     title: String
@@ -20,6 +26,8 @@ const typeDefs = gql`
     hello: String
     getAllTrips: [Trip]
     getPost(id: ID): Post
+    getAllUsers: [User]
+    getUserById(id: ID): User
   }
 
   input PostInput {
@@ -35,7 +43,15 @@ const typeDefs = gql`
     endDate: Int
   }
 
+  input UserInput {
+    email: String!
+    password: String!
+  }
+
   type Mutation {
+    register(user: UserInput): Boolean!
+    login(user: UserInput!): User
+    deleteAllUsers: Boolean!
     createTrip(trip: TripInput): Trip
     createPost(post: PostInput): Post
     deleteTrip(id: ID): String

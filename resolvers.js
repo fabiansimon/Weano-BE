@@ -1,12 +1,10 @@
+import bcrypt from 'bcryptjs'
 import Post from "./models/Post.model.js";
 import Trip from "./models/Trip.model.js";
+import User from "./models/User.models.js";
 
 const resolvers = {
   Query: {
-    hello: () => {
-      return "Hello World!";
-    },
-
     getAllTrips: async () => {
       return await Trip.find();
     },
@@ -14,9 +12,46 @@ const resolvers = {
     getPost: async (_, { id }) => {
       return await Post.findById(id);
     },
+
+    getAllUsers: async () => {
+      return await User.find();
+    },
+
+    getUserById: async (_, { id }) => {
+      return await User.findById(id);
+    }
   },
 
   Mutation: {
+    register: async (_, { user }) => {
+      const hashedPassword = await bcrypt.hash(user.password, 10); 
+      const _user = new User({ email: user.email, password: hashedPassword });
+
+      await _user.save();
+      return true; 
+    },
+
+    login: async (_, { user }, { res }) => {
+      const { email, password } = user;
+      const _user = await User.findOne({email});
+
+      if (!_user) {
+        return null;
+      }
+
+      const valid = await bcrypt.compare(password, user.password);
+      if (!valid) {
+        return null; 
+      }
+
+      return _user;
+    },
+
+    deleteAllUsers: async () => {
+      await User.deleteMany({});
+      return true;
+    },
+
     createTrip: async (_, args) => {
       const { title, location, invitees, startDate, endDate } = args.trip;
       const trip = new Trip({ title, location, invitees, startDate, endDate });
