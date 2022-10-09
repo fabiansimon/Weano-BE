@@ -9,6 +9,7 @@ const typeDefs = gql`
 
   type User {
     id: ID
+    count: Int
     email: String
     password: String
   }
@@ -23,7 +24,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    hello: String
+    me: User
     getAllTrips: [Trip]
     getPost(id: ID): Post
     getAllUsers: [User]
@@ -49,8 +50,8 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    register(user: UserInput): Boolean!
-    login(user: UserInput!): User
+    register(user: UserInput): String!
+    login(user: UserInput!): String!
     deleteAllUsers: Boolean!
     createTrip(trip: TripInput): Trip
     createPost(post: PostInput): Post

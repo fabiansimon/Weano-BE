@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const TripSchema = new mongoose.Schema({
   title: {
@@ -10,16 +10,16 @@ const TripSchema = new mongoose.Schema({
   },
   invitees: {
     type: Array,
-    required: true
+    required: true,
   },
   startDate: {
     type: Number,
   },
   endDate: {
     type: Number,
-  }
+  },
 });
 
-const Trip = mongoose.model('trip', TripSchema);
+const Trip = mongoose.model("trip", TripSchema);
 
 export default Trip;
