@@ -15,7 +15,10 @@ const resolvers = {
       return await User.findById(userId);
     },
 
-    getAllTrips: async () => {
+    getAllTrips: async (_, __, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
       return await Trip.find();
     },
 
