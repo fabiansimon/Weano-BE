@@ -1,6 +1,7 @@
 import { ApolloError, AuthenticationError } from "apollo-server-express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import Image from "./models/Image.model.js";
 import Post from "./models/Post.model.js";
 import Trip from "./models/Trip.model.js";
 import User from "./models/User.models.js";
@@ -77,6 +78,14 @@ const resolvers = {
       );
 
       return accessToken;
+    },
+
+    addImage: async (_, { image }, { res }) => {
+      const { title, description, imageUri } = image;
+      const _image = new Image({ title, description, imageUri})
+
+      await _image.save();
+      return true;
     },
 
     deleteAllUsers: async () => {

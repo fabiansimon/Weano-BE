@@ -49,10 +49,17 @@ const typeDefs = gql`
     password: String!
   }
 
+  input ImageInput {
+    imageUri: String!
+    title: String
+    description: String
+  }
+
   type Mutation {
     register(user: UserInput): String!
     login(user: UserInput!): String!
     deleteAllUsers: Boolean!
+    addImage(image: ImageInput): Boolean 
     createTrip(trip: TripInput): Trip
     createPost(post: PostInput): Post
     deleteTrip(id: ID): String
