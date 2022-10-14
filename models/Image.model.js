@@ -11,6 +11,10 @@ const ImageScheme = new mongoose.Schema({
   description: {
     type: String,
   },
+  ownerId: {
+    type: String,
+    required: true,
+  }
 },
   {
     timestamps: true,

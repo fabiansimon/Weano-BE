@@ -7,9 +7,17 @@ const typeDefs = gql`
     description: String
   }
 
+  type Image {
+    id: ID
+    imageUri: String!
+    title: String
+    description: String
+    ownerId: String!
+  }
+
   type User {
     id: ID
-    count: Int
+    images: [Image]
     email: String
     password: String
   }
@@ -59,7 +67,7 @@ const typeDefs = gql`
     register(user: UserInput): String!
     login(user: UserInput!): String!
     deleteAllUsers: Boolean!
-    addImage(image: ImageInput): Boolean 
+    uploadImage(image: ImageInput): Image!
     createTrip(trip: TripInput): Trip
     createPost(post: PostInput): Post
     deleteTrip(id: ID): String
