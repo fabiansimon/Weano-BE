@@ -81,16 +81,16 @@ const resolvers = {
     },
 
     uploadImage: async (_, { image }, { userId }) => {
-      const { title, description, imageUri } = image;
+      const { title, description, uri } = image;
       if (!userId) {
         throw new AuthenticationError("Not authenticated");
       }
-      
-      const _image = new Image({ title, description, imageUri, ownerId: userId })
-      await User.findByIdAndUpdate(userId, { $push: { images: _image.id }})
+
+      const _image = new Image({ title, description, uri, ownerId: userId });
+      await User.findByIdAndUpdate(userId, { $push: { images: _image.id } });
 
       await _image.save();
-      return "Image successfully uploaded";
+      return true;
     },
 
     deleteAllUsers: async () => {

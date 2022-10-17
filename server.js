@@ -32,8 +32,8 @@ const startServer = async () => {
 
   server.applyMiddleware({ app });
 
-  app.use((req, res, next) => {
-    res.send("Hello from express apollo sever");
+  app.use((_, res) => {
+    res.send("Hello from express apollo sever 🎉");
   });
 
   const db = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@traveliocluster.slwo6yz.mongodb.net/?retryWrites=true&w=majority`;
