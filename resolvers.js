@@ -98,7 +98,10 @@ const resolvers = {
       return true;
     },
 
-    createTrip: async (_, args) => {
+    createTrip: async (_, args, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
       const { title, location, invitees, startDate, endDate } = args.trip;
       const trip = new Trip({ title, location, invitees, startDate, endDate });
 
