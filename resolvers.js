@@ -40,9 +40,11 @@ const resolvers = {
   },
 
   Mutation: {
-    register: async (_, { user }) => {
-      const hashedPassword = await bcrypt.hash(user.password, 10);
-      const _user = new User({ email: user.email, password: hashedPassword });
+    registerUser: async (_, { user }) => {
+      // const hashedPassword = await bcrypt.hash(user.password, 10);
+      console.log(user);
+      const { phoneNumber, email, firstName, lastName } = user;
+      const _user = new User({ phoneNumber, email, firstName, lastName });
 
       await _user.save();
 
@@ -56,18 +58,18 @@ const resolvers = {
       return accessToken;
     },
 
-    login: async (_, { user }, { res }) => {
-      const { email, password } = user;
-      const _user = await User.findOne({ email });
+    loginUser: async (_, { user }, { res }) => {
+      const { phoneNumber } = user;
+      const _user = await User.findOne({ phoneNumber });
 
       if (!_user) {
-        throw new ApolloError("No user with that email found");
+        throw new ApolloError("No user with that phone number found");
       }
 
-      const valid = await bcrypt.compare(password, _user.password);
-      if (!valid) {
-        throw new ApolloError("Password doesn't match");
-      }
+      // const valid = await bcrypt.compare(password, _user.password);
+      // if (!valid) {
+      //   throw new ApolloError("Password doesn't match");
+      // }
 
       const accessToken = jwt.sign(
         { userId: _user.id },

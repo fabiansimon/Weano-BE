@@ -9,9 +9,11 @@ const typeDefs = gql`
 
   type User {
     id: ID
-    count: Int
     email: String
-    password: String
+    firstName: String
+    lastName: String
+    images: [String]
+    trips: [String]
   }
 
   type Trip {
@@ -44,9 +46,15 @@ const typeDefs = gql`
     endDate: Int
   }
 
-  input UserInput {
+  input RegisterUserInput {
+    phoneNumber: String!
     email: String!
-    password: String!
+    firstName: String!
+    lastName: String!
+  }
+
+  input LoginUserInput {
+    phoneNumber: String!
   }
 
   input ImageInput {
@@ -56,8 +64,8 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    register(user: UserInput): String!
-    login(user: UserInput!): String!
+    registerUser(user: RegisterUserInput!): String!
+    loginUser(user: LoginUserInput!): String!
     deleteAllUsers: Boolean!
     uploadImage(image: ImageInput!): Boolean
     createTrip(trip: TripInput): Trip
