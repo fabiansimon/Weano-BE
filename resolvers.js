@@ -1,4 +1,8 @@
-import { ApolloError, AuthenticationError } from "apollo-server-express";
+import {
+  ApolloError,
+  AuthenticationError,
+  ValidationError,
+} from "apollo-server-express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Image from "./models/Image.model.js";
@@ -42,8 +46,14 @@ const resolvers = {
   Mutation: {
     registerUser: async (_, { user }) => {
       // const hashedPassword = await bcrypt.hash(user.password, 10);
-      console.log(user);
       const { phoneNumber, email, firstName, lastName } = user;
+
+      const res = await User.find({ $or: [{ phoneNumber }, { email }] });
+
+      if (res.length) {
+        throw new ValidationError("Already a user");
+      }
+
       const _user = new User({ phoneNumber, email, firstName, lastName });
 
       await _user.save();
