@@ -5,6 +5,7 @@ import resolvers from "./resolvers.js";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import twilio from 'twilio';
 dotenv.config();
 
 const startServer = async () => {
@@ -30,11 +31,11 @@ const startServer = async () => {
 
   await server.start();
 
-  server.applyMiddleware({ app });
+  app.get('/', async (_, res) => {
+    res.send('Hello')
+  })
 
-  app.use((_, res) => {
-    res.send("Hello from express apollo sever 🎉");
-  });
+  server.applyMiddleware({ app });
 
   const db = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@traveliocluster.slwo6yz.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -44,6 +45,37 @@ const startServer = async () => {
   });
 
   console.log("Mongoose conntected");
+
+
+  const twilioClient = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+  app.get('/verify/:to', async (req, res) => {
+    const to = req.params.to
+  
+    twilioClient.verify
+      .services(process.env.TWILIO_SERVICE_ID)
+      .verifications.create({ to, channel: 'sms' })
+      .then((verification) => {
+        res.json(verification)
+      })
+      .catch((err) => {
+        res.json(err)
+      })
+  })
+
+  app.get('/check/:to/:code', async (req, res) => {
+    const to = req.params.to
+    const code = req.params.code
+    twilioClient.verify
+      .services(process.env.TWILIO_SERVICE_ID)
+      .verificationChecks.create({ to, code })
+      .then((verification) => {
+        res.json(verification)
+      })
+      .catch((err) => {
+        res.json(err)
+      })
+  })
 
   app.listen(process.env.PORT, () =>
     console.log(
