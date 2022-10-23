@@ -16,6 +16,11 @@ const typeDefs = gql`
     trips: [String]
   }
 
+  input InviteeInput {
+    phoneNumber: String!
+    status: String
+  }
+
   type Trip {
     id: ID
     title: String
@@ -41,7 +46,7 @@ const typeDefs = gql`
   input TripInput {
     title: String
     location: String
-    invitees: [String]!
+    invitees: [InviteeInput]!
     startDate: Int
     endDate: Int
   }
@@ -72,6 +77,7 @@ const typeDefs = gql`
     createPost(post: PostInput): Post
     deleteTrip(id: ID): String
     deleteAllTrips: String
+    deleteUser: Boolean
     updatePost(id: ID, post: PostInput): Post
   }
 `;

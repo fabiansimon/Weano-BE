@@ -13,11 +13,13 @@ const TripSchema = new mongoose.Schema(
       type: Array,
       required: true,
     },
-    startDate: {
-      type: Number,
-    },
-    endDate: {
-      type: Number,
+    dateRange: {
+      startDate: {
+        type: Number,
+      },
+      endDate: {
+        type: Number,
+      },
     },
   },
   {

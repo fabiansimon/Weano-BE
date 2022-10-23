@@ -115,7 +115,12 @@ const resolvers = {
         throw new AuthenticationError("Not authenticated");
       }
       const { title, location, invitees, startDate, endDate } = args.trip;
-      const trip = new Trip({ title, location, invitees, startDate, endDate });
+      const trip = new Trip({
+        title,
+        location,
+        invitees,
+        dateRange: { startDate, endDate },
+      });
 
       await trip.save();
       return trip;
@@ -129,6 +134,15 @@ const resolvers = {
     deleteAllTrips: async () => {
       await Trip.deleteMany({});
       return "Trips successfully deleted";
+    },
+
+    deleteUser: async (_, __, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
+      await User.findByIdAndDelete(userId);
+      return true;
     },
 
     updatePost: async (_, args) => {
