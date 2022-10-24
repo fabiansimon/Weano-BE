@@ -41,6 +41,15 @@ const resolvers = {
     getUserById: async (_, { id }) => {
       return await User.findById(id);
     },
+
+    getUserInitData: async (_, __, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+      // NOT DONE OBV
+      const user = await User.findById(userId);
+      return user;
+    },
   },
 
   Mutation: {

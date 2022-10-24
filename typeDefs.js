@@ -16,6 +16,11 @@ const typeDefs = gql`
     trips: [String]
   }
 
+  type InitDataResponse {
+    userData: User
+    trips: [Trip]
+  }
+
   input InviteeInput {
     phoneNumber: String!
     status: String
@@ -36,6 +41,7 @@ const typeDefs = gql`
     getPost(id: ID): Post
     getAllUsers: [User]
     getUserById(id: ID): User
+    getUserInitData: InitDataResponse
   }
 
   input PostInput {

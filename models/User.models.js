@@ -21,6 +21,9 @@ const UserSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    avatarUri: {
+      type: String,
+    },
     images: {
       type: Array,
     },
