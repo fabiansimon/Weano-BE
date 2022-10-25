@@ -130,7 +130,6 @@ const resolvers = {
       await _image.save();
       return true;
     },
-
     deleteAllUsers: async () => {
       await User.deleteMany({});
       return true;
@@ -178,6 +177,22 @@ const resolvers = {
       }
 
       await User.findByIdAndDelete(userId);
+      return true;
+    },
+
+    updateUser: async (_, { user }, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+      const { avatarUri } = user;
+
+      const updates = {};
+
+      if (avatarUri !== undefined) {
+        updates.avatarUri = avatarUri;
+      }
+
+      await User.findByIdAndUpdate(userId, updates, { new: true });
       return true;
     },
 

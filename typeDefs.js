@@ -97,6 +97,14 @@ const typeDefs = gql`
     description: String
   }
 
+  input UserInput {
+    phoneNumber: String
+    avatarUri: String
+    email: String
+    firstName: String
+    lastName: String
+  }
+
   type Mutation {
     registerUser(user: RegisterUserInput!): String!
     loginUser(user: LoginUserInput!): String!
@@ -108,6 +116,7 @@ const typeDefs = gql`
     deleteAllTrips: String
     deleteUser: Boolean
     updatePost(id: ID, post: PostInput): Post
+    updateUser(user: UserInput): Boolean
   }
 `;
 
