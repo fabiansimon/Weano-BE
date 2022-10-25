@@ -9,6 +9,8 @@ const typeDefs = gql`
 
   type User {
     id: ID
+    phoneNumber: String
+    avatarUri: String
     email: String
     firstName: String
     lastName: String
@@ -16,13 +18,22 @@ const typeDefs = gql`
     trips: [String]
   }
 
+  type DateRange {
+    startDate: Int
+    endDate: Int
+  }
+
+  type Invitee {
+    phoneNumber: String!
+    status: String
+  }
+
   type Trip {
     id: ID
     title: String
     location: String
-    invitees: [String]!
-    startDate: Int
-    endDate: Int
+    invitees: [Invitee]
+    dateRange: DateRange
   }
 
   type Image {
@@ -38,7 +49,7 @@ const typeDefs = gql`
   }
 
   input InviteeInput {
-    phoneNumber: String!
+    phoneNumber: String
     status: String
   }
 
@@ -56,16 +67,21 @@ const typeDefs = gql`
     description: String
   }
 
-  input TripInput {
-    title: String
-    location: String
-    invitees: [InviteeInput]!
+  input DateRangeInput {
     startDate: Int
     endDate: Int
   }
 
+  input TripInput {
+    title: String
+    location: String
+    invitees: [InviteeInput]
+    dateRange: DateRangeInput
+  }
+
   input RegisterUserInput {
     phoneNumber: String!
+    avatarUri: String
     email: String!
     firstName: String!
     lastName: String!

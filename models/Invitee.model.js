@@ -1,21 +1,15 @@
 import mongoose from "mongoose";
 
-const InviteeSchema = new mongoose.Schema(
-  {
-    phoneNumber: {
-      type: String,
-      required: true,
-    },
-    status: {
-      type: String,
-      enum: ["PENDING", "UNSUCCESSFUL", "ACCEPTED"],
-      default: "PENDING",
-    },
+const InviteeSchema = new mongoose.Schema({
+  phoneNumber: {
+    type: String,
+    required: true,
   },
-  {
-    timestamps: true,
-  }
-);
+  status: {
+    type: String,
+    default: "PENDING",
+  },
+});
 
 const Invitee = mongoose.model("invitee", InviteeSchema);
 

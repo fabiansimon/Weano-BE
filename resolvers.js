@@ -142,12 +142,12 @@ const resolvers = {
       }
 
       try {
-        const { title, location, invitees, startDate, endDate } = args.trip;
+        const { title, location, invitees, dateRange } = args.trip;
         const trip = new Trip({
           title,
           location,
           invitees,
-          dateRange: { startDate, endDate },
+          dateRange,
         });
         const { _id } = await trip.save();
 
