@@ -16,16 +16,6 @@ const typeDefs = gql`
     trips: [String]
   }
 
-  type InitDataResponse {
-    userData: User
-    trips: [Trip]
-  }
-
-  input InviteeInput {
-    phoneNumber: String!
-    status: String
-  }
-
   type Trip {
     id: ID
     title: String
@@ -33,6 +23,23 @@ const typeDefs = gql`
     invitees: [String]!
     startDate: Int
     endDate: Int
+  }
+
+  type Image {
+    uri: String!
+    title: String
+    description: String
+  }
+
+  type InitDataResponse {
+    userData: User
+    trips: [Trip]
+    images: [Image]
+  }
+
+  input InviteeInput {
+    phoneNumber: String!
+    status: String
   }
 
   type Query {
@@ -79,7 +86,7 @@ const typeDefs = gql`
     loginUser(user: LoginUserInput!): String!
     deleteAllUsers: Boolean!
     uploadImage(image: ImageInput!): Boolean
-    createTrip(trip: TripInput): Trip
+    createTrip(trip: TripInput): Boolean
     createPost(post: PostInput): Post
     deleteTrip(id: ID): String
     deleteAllTrips: String

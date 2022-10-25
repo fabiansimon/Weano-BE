@@ -46,9 +46,26 @@ const resolvers = {
       if (!userId) {
         throw new AuthenticationError("Not authenticated");
       }
-      // NOT DONE OBV
-      const user = await User.findById(userId);
-      return user;
+
+      const userData = await User.findById(userId);
+
+      const trips = await Trip.find({
+        _id: {
+          $in: userData.trips,
+        },
+      });
+
+      const images = await Image.find({
+        _id: {
+          $in: userData.images,
+        },
+      });
+
+      return {
+        userData,
+        trips,
+        images,
+      };
     },
   },
 
@@ -123,16 +140,26 @@ const resolvers = {
       if (!userId) {
         throw new AuthenticationError("Not authenticated");
       }
-      const { title, location, invitees, startDate, endDate } = args.trip;
-      const trip = new Trip({
-        title,
-        location,
-        invitees,
-        dateRange: { startDate, endDate },
-      });
 
-      await trip.save();
-      return trip;
+      try {
+        const { title, location, invitees, startDate, endDate } = args.trip;
+        const trip = new Trip({
+          title,
+          location,
+          invitees,
+          dateRange: { startDate, endDate },
+        });
+        const { _id } = await trip.save();
+
+        await User.findByIdAndUpdate(userId, {
+          $push: { trips: _id.toString() },
+        });
+        return true;
+      } catch (err) {
+        throw new ApolloError(
+          "Something went wrong creating while creating a Trip"
+        );
+      }
     },
 
     deleteTrip: async (_, { id }) => {
