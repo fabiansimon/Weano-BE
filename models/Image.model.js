@@ -12,7 +12,11 @@ const ImageScheme = new mongoose.Schema(
     description: {
       type: String,
     },
-    ownerId: {
+    author: {
+      type: String,
+      required: true,
+    },
+    tripId: {
       type: String,
       required: true,
     },

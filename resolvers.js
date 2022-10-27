@@ -3,10 +3,8 @@ import {
   AuthenticationError,
   ValidationError,
 } from "apollo-server-express";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Image from "./models/Image.model.js";
-import Post from "./models/Post.model.js";
 import Trip from "./models/Trip.model.js";
 import User from "./models/User.models.js";
 
@@ -16,30 +14,68 @@ const resolvers = {
       if (!userId) {
         return null;
       }
-
-      return await User.findById(userId);
+      try {
+        return await User.findById(userId);
+      } catch (error) {
+        throw new ApolloError(error);
+      }
     },
 
     getAllTrips: async (_, __, { userId }) => {
       if (!userId) {
         throw new AuthenticationError("Not authenticated");
       }
-      return await Trip.find();
-    },
 
-    getPost: async (_, { id }) => {
-      return await Post.findById(id);
+      try {
+        return await Trip.find();
+      } catch (error) {
+        throw new ApolloError(error);
+      }
     },
 
     getAllUsers: async (_, __, { userId }) => {
       if (!userId) {
         throw new AuthenticationError("Not authenticated");
       }
+
       return await User.find();
     },
 
     getUserById: async (_, { id }) => {
-      return await User.findById(id);
+      try {
+        return await User.findById(id);
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+
+    getTripInitData: async (_, { tripId }, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
+      try {
+        const tripData = await Trip.findById(tripId);
+        const images = await Image.find({
+          _id: {
+            $in: tripData.images,
+          },
+        });
+
+        const activeMembers = await User.find({
+          _id: {
+            $in: tripData.activeMembers,
+          },
+        });
+
+        return {
+          tripData,
+          images,
+          activeMembers,
+        };
+      } catch (error) {
+        throw new ApolloError(error);
+      }
     },
 
     getUserInitData: async (_, __, { userId }) => {
@@ -47,88 +83,106 @@ const resolvers = {
         throw new AuthenticationError("Not authenticated");
       }
 
-      const userData = await User.findById(userId);
+      try {
+        const userData = await User.findById(userId);
 
-      const trips = await Trip.find({
-        _id: {
-          $in: userData.trips,
-        },
-      });
+        const trips = await Trip.find({
+          _id: {
+            $in: userData.trips,
+          },
+        });
 
-      const images = await Image.find({
-        _id: {
-          $in: userData.images,
-        },
-      });
+        const images = await Image.find({
+          _id: {
+            $in: userData.images,
+          },
+        });
 
-      return {
-        userData,
-        trips,
-        images,
-      };
+        return {
+          userData,
+          trips,
+          images,
+        };
+      } catch (error) {
+        throw new ApolloError(error);
+      }
     },
   },
 
   Mutation: {
     registerUser: async (_, { user }) => {
-      // const hashedPassword = await bcrypt.hash(user.password, 10);
-      const { phoneNumber, email, firstName, lastName } = user;
+      try {
+        const { phoneNumber, email, firstName, lastName } = user;
 
-      const res = await User.find({ $or: [{ phoneNumber }, { email }] });
+        const res = await User.find({ $or: [{ phoneNumber }, { email }] });
 
-      if (res.length) {
-        throw new ValidationError("Already a user");
-      }
-
-      const _user = new User({ phoneNumber, email, firstName, lastName });
-
-      await _user.save();
-
-      const accessToken = jwt.sign(
-        { userId: _user.id },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "7d",
+        if (res.length) {
+          throw new ValidationError("Already a user");
         }
-      );
-      return accessToken;
+
+        const _user = new User({ phoneNumber, email, firstName, lastName });
+
+        await _user.save();
+
+        const accessToken = jwt.sign(
+          { userId: _user.id },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: "7d",
+          }
+        );
+        return accessToken;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
     },
 
     loginUser: async (_, { user }, { res }) => {
-      const { phoneNumber } = user;
-      const _user = await User.findOne({ phoneNumber });
+      try {
+        const { phoneNumber } = user;
+        const _user = await User.findOne({ phoneNumber });
 
-      if (!_user) {
-        throw new ApolloError("No user with that phone number found");
-      }
-
-      // const valid = await bcrypt.compare(password, _user.password);
-      // if (!valid) {
-      //   throw new ApolloError("Password doesn't match");
-      // }
-
-      const accessToken = jwt.sign(
-        { userId: _user.id },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "7d",
+        if (!_user) {
+          throw new ApolloError("No user with that phone number found");
         }
-      );
 
-      return accessToken;
+        const accessToken = jwt.sign(
+          { userId: _user.id },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: "7d",
+          }
+        );
+
+        return accessToken;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
     },
 
-    uploadImage: async (_, { image }, { userId }) => {
-      const { title, description, uri } = image;
+    uploadTripImage: async (_, { image }, { userId }) => {
       if (!userId) {
         throw new AuthenticationError("Not authenticated");
       }
 
-      const _image = new Image({ title, description, uri, ownerId: userId });
-      await User.findByIdAndUpdate(userId, { $push: { images: _image.id } });
+      try {
+        const { title, description, uri, tripId } = image;
 
-      await _image.save();
-      return true;
+        const _image = new Image({
+          title,
+          description,
+          uri,
+          author: userId,
+          tripId,
+        });
+        await User.findByIdAndUpdate(userId, { $push: { images: _image.id } });
+        await Trip.findByIdAndUpdate(tripId, { $push: { images: _image.id } });
+
+        await _image.save();
+        return true;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
     },
     deleteAllUsers: async () => {
       await User.deleteMany({});
@@ -154,16 +208,18 @@ const resolvers = {
           $push: { trips: _id.toString() },
         });
         return true;
-      } catch (err) {
-        throw new ApolloError(
-          "Something went wrong creating while creating a Trip"
-        );
+      } catch (error) {
+        throw new ApolloError(error);
       }
     },
 
     deleteTrip: async (_, { id }) => {
-      await Trip.findByIdAndDelete(id);
-      return "Trip successfully deleted";
+      try {
+        await Trip.findByIdAndDelete(id);
+        return true;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
     },
 
     deleteAllTrips: async () => {
@@ -176,42 +232,60 @@ const resolvers = {
         throw new AuthenticationError("Not authenticated");
       }
 
-      await User.findByIdAndDelete(userId);
-      return true;
+      try {
+        await User.findByIdAndDelete(userId);
+        return true;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
     },
 
     updateUser: async (_, { user }, { userId }) => {
       if (!userId) {
         throw new AuthenticationError("Not authenticated");
       }
-      const { avatarUri } = user;
 
-      const updates = {};
+      try {
+        const { avatarUri, firstName, lastName, email, phoneNumber } = user;
 
-      if (avatarUri !== undefined) {
-        updates.avatarUri = avatarUri;
+        const updates = {};
+
+        if (avatarUri !== undefined) {
+          updates.avatarUri = avatarUri;
+        }
+        if (firstName !== undefined) {
+          updates.firstName = firstName;
+        }
+        if (lastName !== undefined) {
+          updates.lastName = lastName;
+        }
+        if (email !== undefined) {
+          updates.email = email;
+        }
+        if (phoneNumber !== undefined) {
+          updates.phoneNumber = phoneNumber;
+        }
+
+        await User.findByIdAndUpdate(userId, updates, { new: true });
+        return true;
+      } catch (error) {
+        throw new ApolloError(error);
       }
-
-      await User.findByIdAndUpdate(userId, updates, { new: true });
-      return true;
     },
 
-    updatePost: async (_, args) => {
-      const { id } = args;
-      const { title, description } = args.post;
-
-      const updates = {};
-
-      if (title !== undefined) {
-        updates.title = title;
+    joinTrip: async (_, { tripId }, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
       }
 
-      if (description !== undefined) {
-        updates.description = description;
+      try {
+        await Trip.findByIdAndUpdate(tripId, {
+          $push: { activeMembers: userId.toString() },
+        });
+        return true;
+      } catch (error) {
+        throw new ApolloError(error);
       }
-
-      const newPost = await Post.findByIdAndUpdate(id, updates, { new: true });
-      return newPost;
     },
   },
 };

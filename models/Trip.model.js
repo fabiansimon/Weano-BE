@@ -13,6 +13,10 @@ const TripSchema = new mongoose.Schema(
       type: Array,
       required: true,
     },
+    activeMembers: {
+      type: Array,
+      required: true,
+    },
     dateRange: {
       startDate: {
         type: Number,
@@ -20,6 +24,9 @@ const TripSchema = new mongoose.Schema(
       endDate: {
         type: Number,
       },
+    },
+    images: {
+      type: Array,
     },
   },
   {

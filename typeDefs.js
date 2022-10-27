@@ -33,6 +33,7 @@ const typeDefs = gql`
     title: String
     location: String
     invitees: [Invitee]
+    activeMembers: [User]
     dateRange: DateRange
   }
 
@@ -40,12 +41,19 @@ const typeDefs = gql`
     uri: String!
     title: String
     description: String
+    author: String
   }
 
   type InitDataResponse {
     userData: User
     trips: [Trip]
     images: [Image]
+  }
+
+  type InitTripResponse {
+    tripData: Trip
+    images: [Image]
+    activeMembers: [User]
   }
 
   input InviteeInput {
@@ -59,6 +67,7 @@ const typeDefs = gql`
     getPost(id: ID): Post
     getAllUsers: [User]
     getUserById(id: ID): User
+    getTripInitData(tripId: String): InitTripResponse
     getUserInitData: InitDataResponse
   }
 
@@ -95,6 +104,8 @@ const typeDefs = gql`
     uri: String!
     title: String
     description: String
+    author: String!
+    tripId: String!
   }
 
   input UserInput {
@@ -109,12 +120,13 @@ const typeDefs = gql`
     registerUser(user: RegisterUserInput!): String!
     loginUser(user: LoginUserInput!): String!
     deleteAllUsers: Boolean!
-    uploadImage(image: ImageInput!): Boolean
+    uploadTripImage(image: ImageInput!): Boolean
     createTrip(trip: TripInput): Boolean
     createPost(post: PostInput): Post
     deleteTrip(id: ID): String
     deleteAllTrips: String
     deleteUser: Boolean
+    joinTrip(tripId: ID): Boolean
     updatePost(id: ID, post: PostInput): Post
     updateUser(user: UserInput): Boolean
   }
