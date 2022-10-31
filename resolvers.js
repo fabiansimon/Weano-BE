@@ -49,7 +49,7 @@ const resolvers = {
       }
     },
 
-    getTripInitData: async (_, { tripId }, { userId }) => {
+    getTripById: async (_, { tripId }, { userId }) => {
       if (!userId) {
         throw new AuthenticationError("Not authenticated");
       }
@@ -73,6 +73,28 @@ const resolvers = {
           images,
           activeMembers,
         };
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+
+    getTripsForUser: async (_, __, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
+      try {
+        const { trips } = await User.findById(userId);
+        console.log(trips);
+
+        const tripsData = await Trip.find({
+          _id: {
+            $in: trips,
+          },
+        });
+
+        console.log(tripsData);
+        return false;
       } catch (error) {
         throw new ApolloError(error);
       }

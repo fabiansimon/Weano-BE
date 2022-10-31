@@ -50,7 +50,7 @@ const typeDefs = gql`
     images: [Image]
   }
 
-  type InitTripResponse {
+  type TripResponse {
     tripData: Trip
     images: [Image]
     activeMembers: [User]
@@ -67,7 +67,8 @@ const typeDefs = gql`
     getPost(id: ID): Post
     getAllUsers: [User]
     getUserById(id: ID): User
-    getTripInitData(tripId: String): InitTripResponse
+    getTripById(tripId: String): TripResponse
+    getTripsForUser: Boolean
     getUserInitData: InitDataResponse
   }
 
