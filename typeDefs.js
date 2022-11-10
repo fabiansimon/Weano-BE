@@ -59,6 +59,7 @@ const typeDefs = gql`
   input InviteeInput {
     phoneNumber: String
     status: String
+    fullName: String
   }
 
   type Query {
