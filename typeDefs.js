@@ -47,6 +47,7 @@ const typeDefs = gql`
   type InitDataResponse {
     userData: User
     trips: [Trip]
+    activeTrip: Trip
     images: [Image]
   }
 

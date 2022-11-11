@@ -114,6 +114,17 @@ const resolvers = {
           },
         });
 
+        const currentTimestamp = (Date.now() / 1000);
+        let activeTrip; 
+
+        for (var i = 0; i < trips.length; i++) {
+          const { startDate, endDate } = trips[i].dateRange;
+          if (startDate < currentTimestamp && endDate > currentTimestamp) {
+            activeTrip = trips[i];
+            break;
+          }
+        } 
+
         const images = await Image.find({
           _id: {
             $in: userData.images,
@@ -124,6 +135,7 @@ const resolvers = {
           userData,
           trips,
           images,
+          activeTrip
         };
       } catch (error) {
         throw new ApolloError(error);
