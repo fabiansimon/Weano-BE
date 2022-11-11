@@ -48,6 +48,7 @@ const typeDefs = gql`
     userData: User
     trips: [Trip]
     activeTrip: Trip
+    recapTrip: Trip
     images: [Image]
   }
 

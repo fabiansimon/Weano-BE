@@ -115,13 +115,21 @@ const resolvers = {
         });
 
         const currentTimestamp = (Date.now() / 1000);
+        let recapTimestamp = new Date();
+        recapTimestamp.setFullYear(recapTimestamp.getFullYear() - 1);
+        recapTimestamp = Date.parse(recapTimestamp)/1000;
+
         let activeTrip; 
+        let recapTrip; 
 
         for (var i = 0; i < trips.length; i++) {
           const { startDate, endDate } = trips[i].dateRange;
           if (startDate < currentTimestamp && endDate > currentTimestamp) {
             activeTrip = trips[i];
-            break;
+          }
+
+          if (startDate < recapTimestamp && endDate > recapTimestamp) {
+            recapTrip = trips[i]
           }
         } 
 
@@ -135,7 +143,8 @@ const resolvers = {
           userData,
           trips,
           images,
-          activeTrip
+          activeTrip,
+          recapTrip
         };
       } catch (error) {
         throw new ApolloError(error);
@@ -231,6 +240,7 @@ const resolvers = {
       try {
         const { title, location, invitees, dateRange } = args.trip;
         const trip = new Trip({
+          hostId: userId,
           title,
           location,
           invitees,

@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const TripSchema = new mongoose.Schema(
   {
+    hostId: {
+      type: String,
+      required: true
+    },
     title: {
       type: String,
       required: true,
