@@ -120,19 +120,30 @@ const typeDefs = gql`
     lastName: String
   }
 
+  input ExpenseInput {
+    title: String!
+    amount: Float!
+    tripId: String!
+    currency: String
+  }
+
   type Mutation {
+    # User
     registerUser(user: RegisterUserInput!): String!
     loginUser(user: LoginUserInput!): String!
     deleteAllUsers: Boolean!
-    uploadTripImage(image: ImageInput!): Boolean
-    createTrip(trip: TripInput): Boolean
-    createPost(post: PostInput): Post
-    deleteTrip(id: ID): String
-    deleteAllTrips: String
     deleteUser: Boolean
     joinTrip(tripId: ID): Boolean
-    updatePost(id: ID, post: PostInput): Post
     updateUser(user: UserInput): Boolean
+
+    # Trip
+    uploadTripImage(image: ImageInput!): Boolean
+    createTrip(trip: TripInput): Boolean
+    deleteTrip(id: ID): String
+    deleteAllTrips: String
+
+    # Expenses
+    createExpense(expense: ExpenseInput!): Boolean
   }
 `;
 

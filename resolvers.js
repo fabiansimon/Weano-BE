@@ -4,6 +4,7 @@ import {
   ValidationError,
 } from "apollo-server-express";
 import jwt from "jsonwebtoken";
+import Expense from "./models/Expense.model.js";
 import Image from "./models/Image.model.js";
 import Trip from "./models/Trip.model.js";
 import User from "./models/User.models.js";
@@ -85,7 +86,6 @@ const resolvers = {
 
       try {
         const { trips } = await User.findById(userId);
-        console.log(trips);
 
         const tripsData = await Trip.find({
           _id: {
@@ -93,7 +93,6 @@ const resolvers = {
           },
         });
 
-        console.log(tripsData);
         return false;
       } catch (error) {
         throw new ApolloError(error);
@@ -114,13 +113,13 @@ const resolvers = {
           },
         });
 
-        const currentTimestamp = (Date.now() / 1000);
+        const currentTimestamp = Date.now() / 1000;
         let recapTimestamp = new Date();
         recapTimestamp.setFullYear(recapTimestamp.getFullYear() - 1);
-        recapTimestamp = Date.parse(recapTimestamp)/1000;
+        recapTimestamp = Date.parse(recapTimestamp) / 1000;
 
-        let activeTrip; 
-        let recapTrip; 
+        let activeTrip;
+        let recapTrip;
 
         for (var i = 0; i < trips.length; i++) {
           const { startDate, endDate } = trips[i].dateRange;
@@ -129,9 +128,9 @@ const resolvers = {
           }
 
           if (startDate < recapTimestamp && endDate > recapTimestamp) {
-            recapTrip = trips[i]
+            recapTrip = trips[i];
           }
-        } 
+        }
 
         const images = await Image.find({
           _id: {
@@ -144,7 +143,7 @@ const resolvers = {
           trips,
           images,
           activeTrip,
-          recapTrip
+          recapTrip,
         };
       } catch (error) {
         throw new ApolloError(error);
@@ -323,8 +322,47 @@ const resolvers = {
       }
 
       try {
-        await Trip.findByIdAndUpdate(tripId, {
+        const { _id } = await Trip.findByIdAndUpdate(tripId, {
           $push: { activeMembers: userId.toString() },
+        });
+
+        await User.findByIdAndUpdate(userId, {
+          $push: { trips: _id.toString() },
+        });
+
+        return true;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+
+    createExpense: async (_, args, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
+      try {
+        const { title, amount, currency, tripId } = args.expense;
+        const expense = new Expense({
+          creatorId: userId,
+          title,
+          amount,
+          currency: currency || "$",
+        });
+
+        const { _id } = await expense.save();
+
+        await Trip.findByIdAndUpdate(tripId, {
+          $push: { expenses: _id.toString() },
+        });
+
+        await User.findByIdAndUpdate(userId, {
+          $push: {
+            expenses: {
+              expense: _id.toString(),
+              trip: tripId,
+            },
+          },
         });
         return true;
       } catch (error) {

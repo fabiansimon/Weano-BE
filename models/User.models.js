@@ -30,6 +30,9 @@ const UserSchema = new mongoose.Schema(
     trips: {
       type: Array,
     },
+    expenses: {
+      type: Array,
+    },
   },
   {
     timestamps: true,

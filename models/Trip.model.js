@@ -4,7 +4,7 @@ const TripSchema = new mongoose.Schema(
   {
     hostId: {
       type: String,
-      required: true
+      required: true,
     },
     title: {
       type: String,
@@ -30,6 +30,9 @@ const TripSchema = new mongoose.Schema(
       },
     },
     images: {
+      type: Array,
+    },
+    expenses: {
       type: Array,
     },
   },
