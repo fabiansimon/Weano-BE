@@ -36,6 +36,7 @@ const typeDefs = gql`
 
   type Trip {
     id: ID
+    thumbnailUri: String
     title: String
     description: String
     location: String
@@ -63,6 +64,7 @@ const typeDefs = gql`
 
   type ActiveTrip {
     id: ID
+    thumbnailUri: String
     title: String
     description: String
     location: String
