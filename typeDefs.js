@@ -37,31 +37,13 @@ const typeDefs = gql`
   type Trip {
     id: ID
     title: String
+    description: String
     location: String
     invitees: [Invitee]
     activeMembers: [User]
     dateRange: DateRange
     expenses: [Expense]
     images: [String]
-  }
-
-  type ActiveTrip {
-    id: ID
-    title: String
-    location: String
-    invitees: [Invitee]
-    activeMembers: [User]
-    dateRange: DateRange
-    expenses: [Expense]
-    images: [String]
-  }
-
-  type Expense {
-    creatorId: String
-    title: String
-    amount: Float
-    currency: String
-    createdAt: String
   }
 
   type Image {
@@ -77,6 +59,26 @@ const typeDefs = gql`
     activeTrip: ActiveTrip
     recapTrip: Trip
     images: [Image]
+  }
+
+  type ActiveTrip {
+    id: ID
+    title: String
+    description: String
+    location: String
+    invitees: [Invitee]
+    activeMembers: [User]
+    dateRange: DateRange
+    expenses: [Expense]
+    images: [String]
+  }
+
+  type Expense {
+    creatorId: String
+    title: String
+    amount: Float
+    currency: String
+    createdAt: String
   }
 
   type TripResponse {
@@ -114,6 +116,7 @@ const typeDefs = gql`
 
   input TripInput {
     title: String
+    description: String
     location: String
     invitees: [InviteeInput]
     dateRange: DateRangeInput
@@ -154,6 +157,19 @@ const typeDefs = gql`
     currency: String
   }
 
+  input UpdatedTripInput {
+    tripId: String!
+    thumbnailUri: String
+    title: String
+    description: String
+    location: String
+    # invitees:
+    # activeMembers
+    # dateRange
+    # images
+    # expenses
+  }
+
   type Mutation {
     # User
     registerUser(user: RegisterUserInput!): String!
@@ -168,6 +184,7 @@ const typeDefs = gql`
     createTrip(trip: TripInput): Boolean
     deleteTrip(id: ID): String
     deleteAllTrips: String
+    updateTrip(trip: UpdatedTripInput!): Boolean
 
     # Expenses
     createExpense(expense: ExpenseInput!): Boolean
