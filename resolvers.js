@@ -130,7 +130,17 @@ const resolvers = {
           if (startDate < recapTimestamp && endDate > recapTimestamp) {
             recapTrip = trips[i];
           }
+
+          if (activeTrip && recapTrip) break;
         }
+
+        const activeTripExpenses = await Expense.find({
+          _id: {
+            $in: activeTrip.expenses,
+          },
+        });
+
+        activeTrip.expenses = activeTripExpenses;
 
         const images = await Image.find({
           _id: {

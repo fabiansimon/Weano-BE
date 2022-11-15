@@ -16,6 +16,12 @@ const typeDefs = gql`
     lastName: String
     images: [String]
     trips: [String]
+    expenses: [UserExpense]
+  }
+
+  type UserExpense {
+    expense: String
+    trip: String
   }
 
   type DateRange {
@@ -35,6 +41,27 @@ const typeDefs = gql`
     invitees: [Invitee]
     activeMembers: [User]
     dateRange: DateRange
+    expenses: [Expense]
+    images: [String]
+  }
+
+  type ActiveTrip {
+    id: ID
+    title: String
+    location: String
+    invitees: [Invitee]
+    activeMembers: [User]
+    dateRange: DateRange
+    expenses: [Expense]
+    images: [String]
+  }
+
+  type Expense {
+    creatorId: String
+    title: String
+    amount: Float
+    currency: String
+    createdAt: String
   }
 
   type Image {
@@ -47,7 +74,7 @@ const typeDefs = gql`
   type InitDataResponse {
     userData: User
     trips: [Trip]
-    activeTrip: Trip
+    activeTrip: ActiveTrip
     recapTrip: Trip
     images: [Image]
   }

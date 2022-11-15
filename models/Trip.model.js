@@ -6,6 +6,9 @@ const TripSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    thumbnailUri: {
+      type: String,
+    },
     title: {
       type: String,
       required: true,
