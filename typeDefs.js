@@ -95,6 +95,14 @@ const typeDefs = gql`
     fullName: String
   }
 
+  type InvitationResponse {
+    title: String
+    description: String
+    dateRange: DateRange
+    location: String
+    hostName: String
+  }
+
   type Query {
     me: User
     getAllTrips: [Trip]
@@ -104,6 +112,7 @@ const typeDefs = gql`
     getTripById(tripId: String): TripResponse
     getTripsForUser: Boolean
     getUserInitData: InitDataResponse
+    getInvitationTripData(tripId: String): InvitationResponse
   }
 
   input PostInput {

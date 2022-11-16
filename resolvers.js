@@ -79,6 +79,24 @@ const resolvers = {
       }
     },
 
+    getInvitationTripData: async (_, { tripId }) => {
+      try {
+        const { title, description, dateRange, location, hostId } =
+          await Trip.findById(tripId);
+        const { firstName } = await User.findById(hostId);
+
+        return {
+          title,
+          description,
+          dateRange,
+          location,
+          hostName: firstName,
+        };
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+
     getTripsForUser: async (_, __, { userId }) => {
       if (!userId) {
         throw new AuthenticationError("Not authenticated");
@@ -247,7 +265,7 @@ const resolvers = {
       }
 
       try {
-        const { title, description, location, invitees, dateRange } = args.trip;
+        const { title, location, invitees, dateRange } = args.trip;
         const trip = new Trip({
           hostId: userId,
           title,
