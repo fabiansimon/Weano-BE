@@ -251,7 +251,7 @@ const resolvers = {
         const trip = new Trip({
           hostId: userId,
           title,
-          description,
+          description: "",
           location,
           invitees,
           dateRange,
