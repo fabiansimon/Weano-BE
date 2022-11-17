@@ -152,13 +152,15 @@ const resolvers = {
           if (activeTrip && recapTrip) break;
         }
 
-        const activeTripExpenses = await Expense.find({
-          _id: {
-            $in: activeTrip.expenses,
-          },
-        });
+        if (activeTrip) {
+          const activeTripExpenses = await Expense.find({
+            _id: {
+              $in: activeTrip.expenses,
+            },
+          });
 
-        activeTrip.expenses = activeTripExpenses;
+          activeTrip.expenses = activeTripExpenses || [];
+        }
 
         const images = await Image.find({
           _id: {
