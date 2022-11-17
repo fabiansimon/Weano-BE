@@ -180,6 +180,24 @@ const resolvers = {
         throw new ApolloError(error);
       }
     },
+
+    getImagesFromTrip: async (_, { tripId }, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
+      try {
+        const { images } = await Trip.findById(tripId);
+
+        return await Image.find({
+          _id: {
+            $in: images,
+          },
+        });
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
   },
 
   Mutation: {

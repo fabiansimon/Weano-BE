@@ -1,12 +1,6 @@
 import { gql } from "apollo-server-express";
 
 const typeDefs = gql`
-  type Post {
-    id: ID
-    title: String
-    description: String
-  }
-
   type User {
     id: ID
     phoneNumber: String
@@ -103,21 +97,26 @@ const typeDefs = gql`
     hostName: String
   }
 
-  type Query {
-    me: User
-    getAllTrips: [Trip]
-    getPost(id: ID): Post
-    getAllUsers: [User]
-    getUserById(id: ID): User
-    getTripById(tripId: String): TripResponse
-    getTripsForUser: Boolean
-    getUserInitData: InitDataResponse
-    getInvitationTripData(tripId: String): InvitationResponse
-  }
-
-  input PostInput {
+  type TripImagesResponse {
+    uri: String!
     title: String
     description: String
+    author: String
+  }
+
+  type Query {
+    # user queries
+    me: User
+    getAllUsers: [User]
+    getUserById(id: ID): User
+    getUserInitData: InitDataResponse
+
+    # trip queries
+    getAllTrips: [Trip]
+    getTripById(tripId: String): TripResponse
+    getTripsForUser: Boolean
+    getInvitationTripData(tripId: String): InvitationResponse
+    getImagesFromTrip(tripId: String): [TripImagesResponse]
   }
 
   input DateRangeInput {
