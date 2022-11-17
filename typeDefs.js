@@ -149,7 +149,6 @@ const typeDefs = gql`
     uri: String!
     title: String
     description: String
-    author: String!
     tripId: String!
   }
 

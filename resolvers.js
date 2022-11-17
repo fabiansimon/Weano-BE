@@ -141,6 +141,7 @@ const resolvers = {
 
         for (var i = 0; i < trips.length; i++) {
           const { startDate, endDate } = trips[i].dateRange;
+
           if (startDate < currentTimestamp && endDate > currentTimestamp) {
             activeTrip = trips[i];
           }
