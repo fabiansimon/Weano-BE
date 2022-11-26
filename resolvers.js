@@ -428,8 +428,22 @@ const resolvers = {
       }
 
       try {
+        const user = userId.toString();
+
+        const trip = await Trip.findById(tripId);
+
+        if (!trip) {
+          throw new ApolloError("Trip ID not valid");
+        }
+
+        const { activeMembers } = trip;
+
+        if (activeMembers.includes(user)) {
+          throw new ApolloError("User already added to Trip");
+        }
+
         const { _id } = await Trip.findByIdAndUpdate(tripId, {
-          $push: { activeMembers: userId.toString() },
+          $push: { activeMembers: user },
         });
 
         await User.findByIdAndUpdate(userId, {
