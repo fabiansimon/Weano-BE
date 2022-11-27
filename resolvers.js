@@ -6,6 +6,7 @@ import {
 import jwt from "jsonwebtoken";
 import Expense from "./models/Expense.model.js";
 import Image from "./models/Image.model.js";
+import Poll from "./models/Poll.model.js";
 import Trip from "./models/Trip.model.js";
 import User from "./models/User.models.js";
 
@@ -160,6 +161,13 @@ const resolvers = {
             },
           });
 
+          const activeTripPolls = await Poll.find({
+            _id: {
+              $in: activeTrip.polls,
+            },
+          });
+
+          activeTrip.polls = activeTripPolls || [];
           activeTrip.expenses = activeTripExpenses || [];
         }
 
@@ -287,6 +295,15 @@ const resolvers = {
 
       try {
         const { title, location, invitees, dateRange } = args.trip;
+
+        const poll = new Poll({
+          creatorId: userId,
+          title: "Destination options",
+          description,
+        });
+
+        const { pollId } = await poll.save();
+
         const trip = new Trip({
           hostId: userId,
           title,
@@ -294,6 +311,7 @@ const resolvers = {
           location,
           invitees,
           dateRange,
+          destinationPoll: pollId.toString(),
         });
         const { _id } = await trip.save();
 
@@ -483,6 +501,42 @@ const resolvers = {
               trip: tripId,
             },
           },
+        });
+        return true;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+
+    createPoll: async (_, args, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
+      try {
+        let { title, description, tripId, options } = args.poll;
+
+        if (options) {
+          options = options.map((option) => {
+            return {
+              ...option,
+              creatorId: userId,
+            };
+          });
+        }
+
+        const poll = new Poll({
+          creatorId: userId,
+          title,
+          description,
+          tripId,
+          options,
+        });
+
+        const { _id } = await poll.save();
+
+        await Trip.findByIdAndUpdate(tripId, {
+          $push: { polls: _id.toString() },
         });
         return true;
       } catch (error) {

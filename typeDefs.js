@@ -67,6 +67,21 @@ const typeDefs = gql`
     dateRange: DateRange
     expenses: [Expense]
     images: [String]
+    polls: [Poll]
+  }
+
+  type Poll {
+    creatorId: String
+    title: String
+    description: String
+    createdAt: String
+    options: [PollOption]
+  }
+
+  type PollOption {
+    option: String
+    votes: [String]
+    creatorId: String
   }
 
   type Expense {
@@ -166,6 +181,18 @@ const typeDefs = gql`
     currency: String
   }
 
+  input PollInput {
+    title: String!
+    description: String
+    tripId: String!
+    options: [PollOptionInput]
+  }
+
+  input PollOptionInput {
+    option: String!
+    votes: [String]
+  }
+
   input UpdatedTripInput {
     tripId: String!
     thumbnailUri: String
@@ -197,6 +224,9 @@ const typeDefs = gql`
 
     # Expenses
     createExpense(expense: ExpenseInput!): Boolean
+
+    # Polls
+    createPoll(poll: PollInput!): Boolean
   }
 `;
 

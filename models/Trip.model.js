@@ -19,6 +19,9 @@ const TripSchema = new mongoose.Schema(
     location: {
       type: String,
     },
+    destinationPoll: {
+      type: String,
+    },
     invitees: {
       type: Array,
       required: true,
@@ -39,6 +42,9 @@ const TripSchema = new mongoose.Schema(
       type: Array,
     },
     expenses: {
+      type: Array,
+    },
+    polls: {
       type: Array,
     },
   },
