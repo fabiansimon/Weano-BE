@@ -28,12 +28,17 @@ const typeDefs = gql`
     status: String
   }
 
+  type Location {
+    placeName: String
+    latlon: [Float]
+  }
+
   type Trip {
     id: ID
     thumbnailUri: String
     title: String
     description: String
-    location: String
+    location: Location
     invitees: [Invitee]
     activeMembers: [User]
     dateRange: DateRange
@@ -61,7 +66,7 @@ const typeDefs = gql`
     thumbnailUri: String
     title: String
     description: String
-    location: String
+    location: Location
     invitees: [Invitee]
     activeMembers: [User]
     dateRange: DateRange
@@ -142,9 +147,14 @@ const typeDefs = gql`
   input TripInput {
     title: String
     description: String
-    location: String
+    location: LocationInput
     invitees: [InviteeInput]
     dateRange: DateRangeInput
+  }
+
+  input LocationInput {
+    placeName: String
+    latlon: [Float]
   }
 
   input RegisterUserInput {
@@ -198,7 +208,7 @@ const typeDefs = gql`
     thumbnailUri: String
     title: String
     description: String
-    location: String
+    location: LocationInput
     # invitees:
     # activeMembers
     # dateRange

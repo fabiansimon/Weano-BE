@@ -17,7 +17,12 @@ const TripSchema = new mongoose.Schema(
       type: String,
     },
     location: {
-      type: String,
+      placeName: {
+        type: String,
+      },
+      latlon: {
+        type: Array,
+      },
     },
     destinationPoll: {
       type: String,

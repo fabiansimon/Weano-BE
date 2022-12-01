@@ -6,10 +6,6 @@ const PollSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    tripId: {
-      type: String,
-      required: true,
-    },
     title: {
       type: String,
       required: true,

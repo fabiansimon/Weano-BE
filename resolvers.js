@@ -299,10 +299,10 @@ const resolvers = {
         const poll = new Poll({
           creatorId: userId,
           title: "Destination options",
-          description,
+          description: "",
         });
 
-        const { pollId } = await poll.save();
+        const { _id: pollId } = await poll.save();
 
         const trip = new Trip({
           hostId: userId,
@@ -313,6 +313,7 @@ const resolvers = {
           dateRange,
           destinationPoll: pollId.toString(),
         });
+
         const { _id } = await trip.save();
 
         await User.findByIdAndUpdate(userId, {
