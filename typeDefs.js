@@ -209,9 +209,9 @@ const typeDefs = gql`
     title: String
     description: String
     location: LocationInput
+    dateRange: DateRangeInput
     # invitees:
     # activeMembers
-    # dateRange
     # images
     # expenses
   }
