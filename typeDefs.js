@@ -100,6 +100,7 @@ const typeDefs = gql`
   type TripResponse {
     tripData: Trip
     images: [Image]
+    expenses: [Expense]
     activeMembers: [User]
   }
 

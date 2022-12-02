@@ -64,6 +64,12 @@ const resolvers = {
           },
         });
 
+        const expenses = await Expense.find({
+          _id: {
+            $in: tripData.expenses,
+          },
+        });
+
         const activeMembers = await User.find({
           _id: {
             $in: tripData.activeMembers,
@@ -73,6 +79,7 @@ const resolvers = {
         return {
           tripData,
           images,
+          expenses,
           activeMembers,
         };
       } catch (error) {
@@ -98,25 +105,6 @@ const resolvers = {
       }
     },
 
-    getTripsForUser: async (_, __, { userId }) => {
-      if (!userId) {
-        throw new AuthenticationError("Not authenticated");
-      }
-
-      try {
-        const { trips } = await User.findById(userId);
-
-        const tripsData = await Trip.find({
-          _id: {
-            $in: trips,
-          },
-        });
-
-        return false;
-      } catch (error) {
-        throw new ApolloError(error);
-      }
-    },
 
     getUserInitData: async (_, __, { userId }) => {
       if (!userId) {
