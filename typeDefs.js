@@ -51,6 +51,7 @@ const typeDefs = gql`
     title: String
     description: String
     author: String
+    createdAt: String
   }
 
   type InitDataResponse {
