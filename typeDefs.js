@@ -126,7 +126,7 @@ const typeDefs = gql`
     title: String
     description: String
     dateRange: DateRange
-    location: String
+    location: Location
     hostName: String
   }
 
