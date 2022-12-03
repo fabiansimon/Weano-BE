@@ -181,8 +181,6 @@ const resolvers = {
           },
         });
 
-        console.log(activeTrip.mutualTasks);
-        console.log(activeTrip.privateTasks);
         return {
           userData,
           trips,
