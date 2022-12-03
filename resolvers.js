@@ -555,10 +555,11 @@ const resolvers = {
       }
 
       try {
-        let { title, tripId, isPrivate = false } = args.task;
+        let { title, tripId, assignee, isPrivate = false } = args.task;
 
         const task = new Task({
           creatorId: userId,
+          assignee,
           title,
         });
 

@@ -6,6 +6,9 @@ const TaskSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    assignee: {
+      type: String,
+    },
     title: {
       type: String,
       require: true,

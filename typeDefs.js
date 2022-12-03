@@ -49,6 +49,7 @@ const typeDefs = gql`
   }
 
   type Task {
+    assignee: String
     creatorId: String
     title: String
     isDone: Boolean
@@ -213,6 +214,8 @@ const typeDefs = gql`
   input TaskInput {
     title: String!
     tripId: String!
+    assignee: String
+    creatorId: String
     isPrivate: Boolean
   }
 
