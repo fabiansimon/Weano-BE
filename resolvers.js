@@ -155,6 +155,12 @@ const resolvers = {
             },
           });
 
+          const activeTripActiveMembers = await User.find({
+            _id: {
+              $in: activeTrip.activeMembers,
+            },
+          });
+
           const activeTripMutualTasks = await Task.find({
             _id: {
               $in: activeTrip.mutualTasks,
@@ -173,6 +179,7 @@ const resolvers = {
           activeTrip.expenses = activeTripExpenses || [];
           activeTrip.mutualTasks = activeTripMutualTasks || [];
           activeTrip.privateTasks = activeTripPrivateTasks || [];
+          activeTrip.activeMembers = activeTripActiveMembers || [];
         }
 
         const images = await Image.find({
