@@ -59,6 +59,7 @@ const typeDefs = gql`
     title: String
     description: String
     author: String
+    createdAt: String
   }
 
   type InitDataResponse {
@@ -110,6 +111,7 @@ const typeDefs = gql`
   type TripResponse {
     tripData: Trip
     images: [Image]
+    expenses: [Expense]
     activeMembers: [User]
   }
 

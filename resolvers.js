@@ -65,6 +65,12 @@ const resolvers = {
           },
         });
 
+        const expenses = await Expense.find({
+          _id: {
+            $in: tripData.expenses,
+          },
+        });
+
         const activeMembers = await User.find({
           _id: {
             $in: tripData.activeMembers,
@@ -74,6 +80,7 @@ const resolvers = {
         return {
           tripData,
           images,
+          expenses,
           activeMembers,
         };
       } catch (error) {
