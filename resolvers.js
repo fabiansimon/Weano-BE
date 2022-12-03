@@ -315,6 +315,7 @@ const resolvers = {
           location,
           invitees,
           dateRange,
+          activeMembers: [userId],
           destinationPoll: pollId.toString(),
         });
 
