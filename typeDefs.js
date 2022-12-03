@@ -44,6 +44,14 @@ const typeDefs = gql`
     dateRange: DateRange
     expenses: [Expense]
     images: [String]
+    mutualTasks: [Task]
+    privateTasks: [Task]
+  }
+
+  type Task {
+    creatorId: String
+    title: String
+    isDone: Boolean
   }
 
   type Image {
@@ -73,6 +81,8 @@ const typeDefs = gql`
     expenses: [Expense]
     images: [String]
     polls: [Poll]
+    mutualTasks: [Task]
+    privateTasks: [Task]
   }
 
   type Poll {
@@ -198,6 +208,12 @@ const typeDefs = gql`
     options: [PollOptionInput]
   }
 
+  input TaskInput {
+    title: String!
+    tripId: String!
+    isPrivate: Boolean
+  }
+
   input PollOptionInput {
     option: String!
     votes: [String]
@@ -237,6 +253,9 @@ const typeDefs = gql`
 
     # Polls
     createPoll(poll: PollInput!): Boolean
+
+    # Tasks
+    createTask(task: TaskInput!): Boolean
   }
 `;
 

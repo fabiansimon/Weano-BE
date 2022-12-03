@@ -27,6 +27,12 @@ const TripSchema = new mongoose.Schema(
     destinationPoll: {
       type: String,
     },
+    mutualTasks: {
+      type: Array,
+    },
+    privateTasks: {
+      type: Array,
+    },
     invitees: {
       type: Array,
       required: true,

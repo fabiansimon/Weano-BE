@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import Expense from "./models/Expense.model.js";
 import Image from "./models/Image.model.js";
 import Poll from "./models/Poll.model.js";
+import Task from "./models/Task.model.js";
 import Trip from "./models/Trip.model.js";
 import User from "./models/User.models.js";
 
@@ -98,26 +99,6 @@ const resolvers = {
       }
     },
 
-    getTripsForUser: async (_, __, { userId }) => {
-      if (!userId) {
-        throw new AuthenticationError("Not authenticated");
-      }
-
-      try {
-        const { trips } = await User.findById(userId);
-
-        const tripsData = await Trip.find({
-          _id: {
-            $in: trips,
-          },
-        });
-
-        return false;
-      } catch (error) {
-        throw new ApolloError(error);
-      }
-    },
-
     getUserInitData: async (_, __, { userId }) => {
       if (!userId) {
         throw new AuthenticationError("Not authenticated");
@@ -167,8 +148,24 @@ const resolvers = {
             },
           });
 
+          const activeTripMutualTasks = await Task.find({
+            _id: {
+              $in: activeTrip.mutualTasks,
+            },
+          });
+
+          const activeTripPrivateTasks = await Task.find({
+            _id: {
+              $in: activeTrip.privateTasks,
+            },
+          })
+            .where("creatorId")
+            .equals(userId);
+
           activeTrip.polls = activeTripPolls || [];
           activeTrip.expenses = activeTripExpenses || [];
+          activeTrip.mutualTasks = activeTripMutualTasks || [];
+          activeTrip.privateTasks = activeTripPrivateTasks || [];
         }
 
         const images = await Image.find({
@@ -177,6 +174,8 @@ const resolvers = {
           },
         });
 
+        console.log(activeTrip.mutualTasks);
+        console.log(activeTrip.privateTasks);
         return {
           userData,
           trips,
@@ -539,6 +538,37 @@ const resolvers = {
         await Trip.findByIdAndUpdate(tripId, {
           $push: { polls: _id.toString() },
         });
+        return true;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+
+    createTask: async (_, args, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
+      try {
+        let { title, tripId, isPrivate = false } = args.task;
+
+        const task = new Task({
+          creatorId: userId,
+          title,
+        });
+
+        const { _id } = await task.save();
+
+        if (isPrivate) {
+          await Trip.findByIdAndUpdate(tripId, {
+            $push: { privateTasks: _id.toString() },
+          });
+        } else {
+          await Trip.findByIdAndUpdate(tripId, {
+            $push: { mutualTasks: _id.toString() },
+          });
+        }
+
         return true;
       } catch (error) {
         throw new ApolloError(error);
