@@ -147,7 +147,7 @@ const typeDefs = gql`
     # trip queries
     getAllTrips: [Trip]
     getTripById(tripId: String): TripResponse
-    getTripsForUser: Boolean
+    getTripsForUser: [Trip]
     getInvitationTripData(tripId: String): InvitationResponse
     getImagesFromTrip(tripId: String): [TripImagesResponse]
   }

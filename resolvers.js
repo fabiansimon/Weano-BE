@@ -217,6 +217,26 @@ const resolvers = {
         throw new ApolloError(error);
       }
     },
+
+    getTripsForUser: async (_, __, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+      try {
+        const userData = await User.findById(userId);
+
+        const trips = await Trip.find({
+          _id: {
+            $in: userData.trips,
+          },
+        });
+
+        // console.log(trips);
+        return trips;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
   },
 
   Mutation: {
