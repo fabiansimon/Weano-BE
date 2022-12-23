@@ -351,7 +351,7 @@ const resolvers = {
         await User.findByIdAndUpdate(userId, {
           $push: { trips: _id.toString() },
         });
-        return true;
+        return _id;
       } catch (error) {
         throw new ApolloError(error);
       }

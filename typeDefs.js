@@ -248,7 +248,7 @@ const typeDefs = gql`
 
     # Trip
     uploadTripImage(image: ImageInput!): Boolean
-    createTrip(trip: TripInput): Boolean
+    createTrip(trip: TripInput): String!
     deleteTrip(id: ID): String
     deleteAllTrips: String
     updateTrip(trip: UpdatedTripInput!): Boolean
