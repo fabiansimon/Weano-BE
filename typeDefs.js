@@ -66,12 +66,12 @@ const typeDefs = gql`
   type InitDataResponse {
     userData: User
     trips: [Trip]
-    activeTrip: ActiveTrip
+    activeTrip: ConcatedTrip
     recapTrip: Trip
     images: [Image]
   }
 
-  type ActiveTrip {
+  type ConcatedTrip {
     id: ID
     thumbnailUri: String
     title: String
@@ -109,13 +109,6 @@ const typeDefs = gql`
     createdAt: String
   }
 
-  type TripResponse {
-    tripData: Trip
-    images: [Image]
-    expenses: [Expense]
-    activeMembers: [User]
-  }
-
   input InviteeInput {
     phoneNumber: String
     status: String
@@ -146,7 +139,7 @@ const typeDefs = gql`
 
     # trip queries
     getAllTrips: [Trip]
-    getTripById(tripId: String): TripResponse
+    getTripById(tripId: String): ConcatedTrip
     getTripsForUser: [Trip]
     getInvitationTripData(tripId: String): InvitationResponse
     getImagesFromTrip(tripId: String): [TripImagesResponse]

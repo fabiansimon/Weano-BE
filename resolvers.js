@@ -58,30 +58,69 @@ const resolvers = {
       }
 
       try {
-        const tripData = await Trip.findById(tripId);
+        const trip = await Trip.findById(tripId);
         const images = await Image.find({
           _id: {
-            $in: tripData.images,
+            $in: trip.images,
           },
         });
 
         const expenses = await Expense.find({
           _id: {
-            $in: tripData.expenses,
+            $in: trip.expenses,
           },
         });
 
         const activeMembers = await User.find({
           _id: {
-            $in: tripData.activeMembers,
+            $in: trip.activeMembers,
           },
         });
 
+        const polls = await Poll.find({
+          _id: {
+            $in: trip.polls,
+          },
+        });
+
+        const mutualTasks = await Task.find({
+          _id: {
+            $in: trip.mutualTasks,
+          },
+        });
+
+        const privateTasks = await Task.find({
+          _id: {
+            $in: trip.privateTasks,
+          },
+        })
+          .where("creatorId")
+          .equals(userId);
+
+        const {
+          _id: id,
+          thumbnailUri,
+          title,
+          description,
+          location,
+          invitees,
+          dateRange,
+        } = trip;
+
         return {
-          tripData,
-          images,
-          expenses,
+          id,
+          thumbnailUri,
+          title,
+          description,
+          location,
+          invitees,
+          dateRange,
           activeMembers,
+          expenses,
+          images,
+          polls,
+          mutualTasks,
+          privateTasks,
         };
       } catch (error) {
         throw new ApolloError(error);
