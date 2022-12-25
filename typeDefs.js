@@ -124,10 +124,17 @@ const typeDefs = gql`
   }
 
   type TripImagesResponse {
+    createdAt: String
     uri: String!
     title: String
     description: String
-    author: String
+    author: Author
+  }
+
+  type Author {
+    firstName: String
+    lastName: String
+    avatarUri: String
   }
 
   type Query {

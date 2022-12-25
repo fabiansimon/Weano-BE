@@ -245,13 +245,30 @@ const resolvers = {
       }
 
       try {
-        const { images } = await Trip.findById(tripId);
+        const { images: tripImages } = await Trip.findById(tripId);
 
-        return await Image.find({
+        let images = await Image.find({
           _id: {
-            $in: images,
+            $in: tripImages,
           },
         });
+
+        const authorsArr = images.map((image) => image.author);
+
+        const authors = await User.find({
+          _id: {
+            $in: authorsArr,
+          },
+        });
+
+        images = images.map((image, index) => {
+          return {
+            ...image._doc,
+            author: authors.filter((author) => author._id == image.author)[0],
+          };
+        });
+
+        return images;
       } catch (error) {
         throw new ApolloError(error);
       }
