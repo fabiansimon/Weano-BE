@@ -81,7 +81,7 @@ const typeDefs = gql`
     activeMembers: [User]
     dateRange: DateRange
     expenses: [Expense]
-    images: [String]
+    images: [Image]
     polls: [Poll]
     mutualTasks: [Task]
     privateTasks: [Task]
