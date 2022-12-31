@@ -9,9 +9,12 @@ import twilio from "twilio";
 dotenv.config();
 
 const startServer = async () => {
+  // Create new ApolloServer with imported typeDefs and resolvers
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+
+    // Check if request was authorized
     context: ({ req }) => {
       const token = req.headers.authorization || "";
 
@@ -27,10 +30,12 @@ const startServer = async () => {
       }
     },
   });
+
+  // create App instance
   const app = express();
 
+  // Start Server
   await server.start();
-
   app.get("/", async (_, res) => {
     res.send("🚀🚀🚀");
   });
@@ -54,36 +59,45 @@ const startServer = async () => {
   app.get("/verify/:to", async (req, res) => {
     const to = req.params.to;
 
-    twilioClient.verify
-      .services(process.env.TWILIO_SERVICE_ID)
-      .verifications.create({ to, channel: "sms" })
-      .then((verification) => {
-        res.json(verification);
-      })
-      .catch((err) => {
-        res.json(err);
-      });
+    try {
+      twilioClient.verify
+        .services(process.env.TWILIO_SERVICE_ID)
+        .verifications.create({ to, channel: "sms" })
+        .then((verification) => {
+          res.json(verification);
+        })
+        .catch((err) => {
+          res.json(err);
+        });
+    } catch (error) {
+      res.json(error);
+    }
   });
 
   app.get("/check/:to/:code", async (req, res) => {
     const to = req.params.to;
     const code = req.params.code;
-    twilioClient.verify
-      .services(process.env.TWILIO_SERVICE_ID)
-      .verificationChecks.create({ to, code })
-      .then((verification) => {
-        res.json(verification);
-      })
-      .catch((err) => {
-        res.json(err);
-      });
+
+    try {
+      twilioClient.verify
+        .services(process.env.TWILIO_SERVICE_ID)
+        .verificationChecks.create({ to, code })
+        .then((verification) => {
+          res.json(verification);
+        })
+        .catch((err) => {
+          res.json(err);
+        });
+    } catch (error) {
+      res.json(error);
+    }
   });
 
-  app.listen(process.env.PORT, () =>
-    console.log(
-      `🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`
-    )
-  );
+  // app.listen(process.env.PORT, () =>
+  //   console.log(
+  //     `🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`
+  //   )
+  // );
 };
 
 startServer();

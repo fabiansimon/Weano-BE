@@ -73,6 +73,7 @@ const typeDefs = gql`
 
   type ConcatedTrip {
     id: ID
+    hostId: String
     thumbnailUri: String
     title: String
     description: String

@@ -99,6 +99,7 @@ const resolvers = {
 
         const {
           _id: id,
+          hostId,
           thumbnailUri,
           title,
           description,
@@ -109,6 +110,7 @@ const resolvers = {
 
         return {
           id,
+          hostId,
           thumbnailUri,
           title,
           description,
