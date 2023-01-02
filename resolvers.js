@@ -6,6 +6,7 @@ import {
 import jwt from "jsonwebtoken";
 import Expense from "./models/Expense.model.js";
 import Image from "./models/Image.model.js";
+import Invitee from "./models/Invitee.model.js";
 import Poll from "./models/Poll.model.js";
 import Task from "./models/Task.model.js";
 import Trip from "./models/Trip.model.js";
@@ -97,6 +98,12 @@ const resolvers = {
           .where("creatorId")
           .equals(userId);
 
+        const invitees = await Invitee.find({
+          _id: {
+            $in: trip.invitees,
+          },
+        });
+
         const {
           _id: id,
           hostId,
@@ -104,7 +111,6 @@ const resolvers = {
           title,
           description,
           location,
-          invitees,
           dateRange,
         } = trip;
 
@@ -289,7 +295,6 @@ const resolvers = {
           },
         });
 
-        // console.log(trips);
         return trips;
       } catch (error) {
         throw new ApolloError(error);
@@ -384,6 +389,27 @@ const resolvers = {
 
       try {
         const { title, location, invitees, dateRange } = args.trip;
+        let inviteeIds = [];
+
+        for (const email of invitees) {
+          const res = await Invitee.find({ email: email });
+
+          // Check if Invitee already exists
+          if (res.length > 0) {
+            inviteeIds.push(res[0]._id.toString());
+          } else {
+            const invitee = new Invitee({
+              email,
+              status: "PENDING",
+              firstName: "",
+              lastName: "",
+            });
+
+            const { _id } = await invitee.save();
+
+            inviteeIds.push(_id.toString());
+          }
+        }
 
         const poll = new Poll({
           creatorId: userId,
@@ -398,7 +424,7 @@ const resolvers = {
           title,
           description: "",
           location,
-          invitees,
+          invitees: inviteeIds,
           dateRange,
           activeMembers: [userId],
           destinationPoll: pollId.toString(),
@@ -525,6 +551,46 @@ const resolvers = {
         }
 
         await Trip.findByIdAndUpdate(tripId, updates, { new: true });
+        return true;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+
+    addInvitees: async (_, args, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
+      try {
+        const { tripId, emails } = args.data;
+
+        // emails.forEach(async (email) => {
+        for (const email in emails) {
+          let id;
+          const res = await Invitee.find({ email: email });
+
+          // Check if Invitee already exists
+          if (res.length > 0) {
+            id = res[0]._id.toString();
+          } else {
+            const invitee = new Invitee({
+              email,
+              status: "PENDING",
+              firstName: "",
+              lastName: "",
+            });
+
+            const { _id } = await invitee.save();
+
+            id = _id.toString();
+          }
+
+          await Trip.findByIdAndUpdate(tripId, {
+            $addToSet: { invitees: id },
+          });
+        }
+
         return true;
       } catch (error) {
         throw new ApolloError(error);
