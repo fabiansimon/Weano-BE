@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import twilio from "twilio";
+import nodemailer from "nodemailer";
 dotenv.config();
 
 const startServer = async () => {
@@ -57,7 +58,7 @@ const startServer = async () => {
   );
 
   app.get("/verify/:to", async (req, res) => {
-    const to = req.params.to;
+    const { to } = req.params;
 
     try {
       twilioClient.verify
@@ -75,8 +76,7 @@ const startServer = async () => {
   });
 
   app.get("/check/:to/:code", async (req, res) => {
-    const to = req.params.to;
-    const code = req.params.code;
+    const { to, code } = req.params;
 
     try {
       twilioClient.verify
@@ -88,6 +88,36 @@ const startServer = async () => {
         .catch((err) => {
           res.json(err);
         });
+    } catch (error) {
+      res.json(error);
+    }
+  });
+
+  app.get("/invite/:receiver/:tripId", async (req, res) => {
+    const { receiver, tripId } = req.params;
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const options = {
+      from: "Weeno",
+      to: receiver,
+      subject: "Weeno Invitation Link",
+      html: `<p>Hey! You've been invited to join a trip! Click the link below to join!</p><a href="https://aynoapp:/invitation/${tripId}"> JOIN TRIP </a>`,
+    };
+
+    try {
+      transporter.sendMail(options, function (err, info) {
+        if (err) {
+          return res.json(err);
+        }
+        return res.json("Email sent: " + info.response);
+      });
     } catch (error) {
       res.json(error);
     }
