@@ -24,8 +24,10 @@ const typeDefs = gql`
   }
 
   type Invitee {
-    phoneNumber: String!
+    email: String!
     status: String
+    firstName: String
+    lastName: String
   }
 
   type Location {
@@ -39,7 +41,7 @@ const typeDefs = gql`
     title: String
     description: String
     location: Location
-    invitees: [Invitee]
+    invitees: [String]
     activeMembers: [User]
     dateRange: DateRange
     expenses: [Expense]
@@ -110,12 +112,6 @@ const typeDefs = gql`
     createdAt: String
   }
 
-  input InviteeInput {
-    phoneNumber: String
-    status: String
-    fullName: String
-  }
-
   type InvitationResponse {
     title: String
     description: String
@@ -162,7 +158,7 @@ const typeDefs = gql`
     title: String
     description: String
     location: LocationInput
-    invitees: [InviteeInput]
+    invitees: [String]
     dateRange: DateRangeInput
   }
 
@@ -225,6 +221,11 @@ const typeDefs = gql`
     votes: [String]
   }
 
+  input AddInviteeInput {
+    tripId: String!
+    emails: [String]!
+  }
+
   input UpdatedTripInput {
     tripId: String!
     thumbnailUri: String
@@ -253,6 +254,7 @@ const typeDefs = gql`
     deleteTrip(id: ID): String
     deleteAllTrips: String
     updateTrip(trip: UpdatedTripInput!): Boolean
+    addInvitees(data: AddInviteeInput!): Boolean
 
     # Expenses
     createExpense(expense: ExpenseInput!): Boolean

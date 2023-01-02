@@ -1,15 +1,26 @@
 import mongoose from "mongoose";
 
-const InviteeSchema = new mongoose.Schema({
-  phoneNumber: {
-    type: String,
-    required: true,
+const InviteeSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      default: "PENDING",
+    },
+    firstName: {
+      type: String,
+    },
+    lastName: {
+      type: String,
+    },
   },
-  status: {
-    type: String,
-    default: "PENDING",
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 const Invitee = mongoose.model("invitee", InviteeSchema);
 
