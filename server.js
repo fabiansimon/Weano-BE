@@ -93,8 +93,9 @@ const startServer = async () => {
     }
   });
 
-  app.get("/invite/:receiver/:tripId", async (req, res) => {
-    const { receiver, tripId } = req.params;
+  app.get("/invite/:receivers/:tripId", async (req, res) => {
+    const { receivers, tripId } = req.params;
+    const formattedReceivers = receivers.split("&").toString();
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -106,7 +107,7 @@ const startServer = async () => {
 
     const options = {
       from: "Weeno",
-      to: receiver,
+      to: formattedReceivers,
       subject: "Weeno Invitation Link",
       html: `<p>Hey! You've been invited to join a trip! Click the link below to join!</p><a href="https://aynoapp:/invitation/${tripId}"> JOIN TRIP </a>`,
     };
