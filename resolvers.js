@@ -565,8 +565,7 @@ const resolvers = {
       try {
         const { tripId, emails } = args.data;
 
-        // emails.forEach(async (email) => {
-        for (const email in emails) {
+        for (const email of emails) {
           let id;
           const res = await Invitee.find({ email: email });
 
