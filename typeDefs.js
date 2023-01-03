@@ -51,6 +51,7 @@ const typeDefs = gql`
   }
 
   type Task {
+    _id: String
     assignee: String
     creatorId: String
     title: String
@@ -58,6 +59,7 @@ const typeDefs = gql`
   }
 
   type Image {
+    _id: String
     uri: String!
     title: String
     description: String
@@ -91,6 +93,7 @@ const typeDefs = gql`
   }
 
   type Poll {
+    _id: String
     creatorId: String
     title: String
     description: String
@@ -105,6 +108,7 @@ const typeDefs = gql`
   }
 
   type Expense {
+    _id: String
     creatorId: String
     title: String
     amount: Float
