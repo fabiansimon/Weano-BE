@@ -41,7 +41,7 @@ const typeDefs = gql`
     title: String
     description: String
     location: Location
-    invitees: [String]
+    invitees: [Invitee]
     activeMembers: [User]
     dateRange: DateRange
     expenses: [Expense]
@@ -226,6 +226,17 @@ const typeDefs = gql`
     emails: [String]!
   }
 
+  input RemoveInviteeInput {
+    tripId: String!
+    email: String!
+  }
+
+  input DeleteInput {
+    tripId: String!
+    id: String!
+    isPrivate: Boolean
+  }
+
   input UpdatedTripInput {
     tripId: String!
     thumbnailUri: String
@@ -255,15 +266,19 @@ const typeDefs = gql`
     deleteAllTrips: String
     updateTrip(trip: UpdatedTripInput!): Boolean
     addInvitees(data: AddInviteeInput!): Boolean
+    removeInvitee(data: RemoveInviteeInput!): Boolean
 
     # Expenses
     createExpense(expense: ExpenseInput!): Boolean
+    deleteExpense(data: DeleteInput!): Boolean
 
     # Polls
     createPoll(poll: PollInput!): Boolean
+    deletePoll(data: DeleteInput!): Boolean
 
     # Tasks
     createTask(task: TaskInput!): Boolean
+    deleteTask(data: DeleteInput!): Boolean
   }
 `;
 

@@ -596,6 +596,31 @@ const resolvers = {
       }
     },
 
+    removeInvitee: async (_, args, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
+      try {
+        const { tripId, email } = args.data;
+
+        const res = await Invitee.find({ email: email });
+        if (res.length <= 0) {
+          throw new ApolloError("No Invitee found with that email");
+        }
+
+        const { _id } = res[0];
+
+        await Trip.findByIdAndUpdate(tripId, {
+          $pull: { invitees: _id.toString() },
+        });
+
+        return true;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+
     joinTrip: async (_, { tripId }, { userId }) => {
       if (!userId) {
         throw new AuthenticationError("Not authenticated");
@@ -659,6 +684,82 @@ const resolvers = {
           },
         });
         return true;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+
+    deleteExpense: async (_, args, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
+      try {
+        const { id, tripId } = args.data;
+
+        try {
+          await Expense.findByIdAndDelete(id);
+          await Trip.findByIdAndUpdate(tripId, {
+            $pull: { expenses: id },
+          });
+
+          return true;
+        } catch (error) {
+          throw new ApolloError(error);
+        }
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+
+    deletePoll: async (_, args, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
+      try {
+        const { id, tripId } = args.data;
+
+        try {
+          await Poll.findByIdAndDelete(id);
+          await Trip.findByIdAndUpdate(tripId, {
+            $pull: { polls: id },
+          });
+
+          return true;
+        } catch (error) {
+          throw new ApolloError(error);
+        }
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+
+    deleteTask: async (_, args, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
+      try {
+        const { id, tripId, isPrivate = false } = args.data;
+
+        try {
+          await Task.findByIdAndDelete(id);
+
+          if (isPrivate) {
+            await Trip.findByIdAndUpdate(tripId, {
+              $pull: { privateTasks: id },
+            });
+          } else {
+            await Trip.findByIdAndUpdate(tripId, {
+              $pull: { mutualTasks: id },
+            });
+          }
+
+          return true;
+        } catch (error) {
+          throw new ApolloError(error);
+        }
       } catch (error) {
         throw new ApolloError(error);
       }
