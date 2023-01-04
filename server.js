@@ -93,16 +93,15 @@ const startServer = async () => {
     }
   });
 
-  app.get("/redirect", async (req, res) => {
-    // const { operation, tripId } = req.params;
+  app.get("/redirect/:operation/:tripId", async (req, res) => {
+    const { operation, tripId } = req.params;
 
     try {
-      // const tripId = 12313213;
-      // console.log(tripId);
       return res.send(
-        `<script>console.log('hello woerld');
-        window.location="weano://invitation/23123";</script>`
-        // `<script>window.location.replace("weano://invitation/${tripId}");</script>`
+        `<script>
+          window.location="weano://${operation}/${tripId}";
+          setTimeout("window.location = 'https://apps.apple.com/us/app/keynote/id361285480';", 800);
+        </script>`
       );
     } catch (error) {
       res.json(error);
@@ -122,10 +121,10 @@ const startServer = async () => {
     });
 
     const options = {
-      from: "Weeno",
+      from: "Weano",
       to: formattedReceivers,
-      subject: "Weeno Invitation Link",
-      html: `<p>Hey! You've been invited to join a trip! Click the link below to join!</p><a href="https://www.weano://invitation/${tripId}"> JOIN TRIP </a>`,
+      subject: "Weano Invitation Link",
+      html: `<p>Hey! You've been invited to join a trip! Click the link below to join!</p><a href="http://143.198.241.91:4000/redirect/invitation/${tripId}"> JOIN TRIP </a>`,
     };
 
     try {
