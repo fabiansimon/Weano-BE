@@ -100,7 +100,7 @@ const startServer = async () => {
       return res.send(
         `<script>
           window.location="weano://${operation}/${tripId}";
-          setTimeout("window.location = 'https://apps.apple.com/us/app/keynote/id361285480';", 800);
+          setTimeout("window.location = 'https://apps.apple.com/us/app/keynote/id361285480';", 2000);
         </script>`
       );
     } catch (error) {
