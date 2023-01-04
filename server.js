@@ -93,6 +93,22 @@ const startServer = async () => {
     }
   });
 
+  app.get("/redirect", async (req, res) => {
+    // const { operation, tripId } = req.params;
+
+    try {
+      // const tripId = 12313213;
+      // console.log(tripId);
+      return res.send(
+        `<script>console.log('hello woerld');
+        window.location="weano://invitation/23123";</script>`
+        // `<script>window.location.replace("weano://invitation/${tripId}");</script>`
+      );
+    } catch (error) {
+      res.json(error);
+    }
+  });
+
   app.get("/invite/:receivers/:tripId", async (req, res) => {
     const { receivers, tripId } = req.params;
     const formattedReceivers = receivers.split("&").toString();
@@ -109,7 +125,7 @@ const startServer = async () => {
       from: "Weeno",
       to: formattedReceivers,
       subject: "Weeno Invitation Link",
-      html: `<p>Hey! You've been invited to join a trip! Click the link below to join!</p><a href="https://aynoapp:/invitation/${tripId}"> JOIN TRIP </a>`,
+      html: `<p>Hey! You've been invited to join a trip! Click the link below to join!</p><a href="https://www.weano://invitation/${tripId}"> JOIN TRIP </a>`,
     };
 
     try {
