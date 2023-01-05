@@ -273,15 +273,15 @@ const typeDefs = gql`
     removeInvitee(data: RemoveInviteeInput!): Boolean
 
     # Expenses
-    createExpense(expense: ExpenseInput!): Boolean
+    createExpense(expense: ExpenseInput!): String
     deleteExpense(data: DeleteInput!): Boolean
 
     # Polls
-    createPoll(poll: PollInput!): Boolean
+    createPoll(poll: PollInput!): String
     deletePoll(data: DeleteInput!): Boolean
 
     # Tasks
-    createTask(task: TaskInput!): Boolean
+    createTask(task: TaskInput!): String
     deleteTask(data: DeleteInput!): Boolean
   }
 `;

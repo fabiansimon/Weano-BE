@@ -683,7 +683,7 @@ const resolvers = {
             },
           },
         });
-        return true;
+        return _id;
       } catch (error) {
         throw new ApolloError(error);
       }
@@ -795,7 +795,7 @@ const resolvers = {
         await Trip.findByIdAndUpdate(tripId, {
           $push: { polls: _id.toString() },
         });
-        return true;
+        return _id;
       } catch (error) {
         throw new ApolloError(error);
       }
@@ -827,7 +827,7 @@ const resolvers = {
           });
         }
 
-        return true;
+        return _id;
       } catch (error) {
         throw new ApolloError(error);
       }
