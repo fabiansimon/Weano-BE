@@ -255,6 +255,11 @@ const typeDefs = gql`
     # expenses
   }
 
+  input UpdateTaskInput {
+    taskId: String!
+    isDone: Boolean!
+  }
+
   type Mutation {
     # User
     registerUser(user: RegisterUserInput!): String!
@@ -284,6 +289,7 @@ const typeDefs = gql`
     # Tasks
     createTask(task: TaskInput!): String
     deleteTask(data: DeleteInput!): Boolean
+    updateTask(data: UpdateTaskInput!): Boolean
   }
 `;
 
