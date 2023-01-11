@@ -791,8 +791,8 @@ const resolvers = {
         let { title, description, tripId, options } = args.poll;
 
         if (options) {
-          const id = uuidv4();
           options = options.map((option) => {
+            const id = uuidv4();
             return {
               ...option,
               creatorId: userId,
