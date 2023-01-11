@@ -766,21 +766,21 @@ const resolvers = {
       }
     },
 
-    voteForPoll: async (_, args, { userId }) => {
-      if (!userId) {
-        throw new AuthenticationError("Not authenticated");
-      }
+    // voteForPoll: async (_, args, { userId }) => {
+    //   if (!userId) {
+    //     throw new AuthenticationError("Not authenticated");
+    //   }
 
-      try {
-        let { pollId } = args.poll;
-        await Poll.findByIdAndUpdate(pollId, {
-          $push: { polls: _id.toString() },
-        });
-        return _id;
-      } catch (error) {
-        throw new ApolloError(error);
-      }
-    },
+    //   try {
+    //     let { pollId } = args.poll;
+    //     await Poll.findByIdAndUpdate(pollId, {
+    //       $push: { polls: _id.toString() },
+    //     });
+    //     return _id;
+    //   } catch (error) {
+    //     throw new ApolloError(error);
+    //   }
+    // },
 
     createPoll: async (_, args, { userId }) => {
       if (!userId) {
