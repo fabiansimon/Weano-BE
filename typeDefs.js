@@ -105,6 +105,7 @@ const typeDefs = gql`
     option: String
     votes: [String]
     creatorId: String
+    id: String
   }
 
   type Expense {
