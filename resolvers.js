@@ -780,7 +780,7 @@ const resolvers = {
     //   } catch (error) {
     //     throw new ApolloError(error);
     //   }
-    // },
+    // }
 
     createPoll: async (_, args, { userId }) => {
       if (!userId) {
@@ -847,6 +847,28 @@ const resolvers = {
         }
 
         return _id;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+
+    updateTask: async (_, args, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
+      try {
+        let { taskId, isDone } = args.data;
+
+        const task = await Task.findByIdAndUpdate(taskId, {
+          isDone,
+        });
+
+        if (!task) {
+          throw new ApolloError("No task found with that ID");
+        }
+
+        return true;
       } catch (error) {
         throw new ApolloError(error);
       }
