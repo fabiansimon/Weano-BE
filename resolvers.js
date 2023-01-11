@@ -4,6 +4,7 @@ import {
   ValidationError,
 } from "apollo-server-express";
 import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
 import Expense from "./models/Expense.model.js";
 import Image from "./models/Image.model.js";
 import Invitee from "./models/Invitee.model.js";
@@ -765,6 +766,22 @@ const resolvers = {
       }
     },
 
+    voteForPoll: async (_, args, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
+      try {
+        let { pollId } = args.poll;
+        await Poll.findByIdAndUpdate(pollId, {
+          $push: { polls: _id.toString() },
+        });
+        return _id;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+
     createPoll: async (_, args, { userId }) => {
       if (!userId) {
         throw new AuthenticationError("Not authenticated");
@@ -774,10 +791,12 @@ const resolvers = {
         let { title, description, tripId, options } = args.poll;
 
         if (options) {
+          const id = uuidv4();
           options = options.map((option) => {
             return {
               ...option,
               creatorId: userId,
+              id,
             };
           });
         }

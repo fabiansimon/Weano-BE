@@ -22,7 +22,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.5.4",
     "nodemailer": "^6.8.0",
-    "twilio": "^3.83.0"
+    "twilio": "^3.83.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.19"
