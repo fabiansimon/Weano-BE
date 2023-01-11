@@ -420,11 +420,16 @@ const resolvers = {
 
         const { _id: pollId } = await poll.save();
 
+        const totalLocation = {
+          ...location,
+          votedBy: [],
+        };
+
         const trip = new Trip({
           hostId: userId,
           title,
           description: "",
-          location,
+          location: totalLocation,
           invitees: inviteeIds,
           dateRange,
           activeMembers: [userId],
@@ -533,7 +538,10 @@ const resolvers = {
           updates.description = description;
         }
         if (location !== undefined) {
-          updates.location = location;
+          updates.location = {
+            ...location,
+            votedBy: [],
+          };
         }
         if (invitees !== undefined) {
           updates.invitees = invitees;
