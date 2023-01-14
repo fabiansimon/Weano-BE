@@ -11,6 +11,7 @@ const typeDefs = gql`
     images: [String]
     trips: [String]
     expenses: [UserExpense]
+    pushToken: String
   }
 
   type UserExpense {
@@ -197,6 +198,7 @@ const typeDefs = gql`
     email: String
     firstName: String
     lastName: String
+    pushToken: String
   }
 
   input ExpenseInput {
