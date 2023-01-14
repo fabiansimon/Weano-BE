@@ -480,7 +480,14 @@ const resolvers = {
       }
 
       try {
-        const { avatarUri, firstName, lastName, email, phoneNumber } = user;
+        const {
+          avatarUri,
+          firstName,
+          lastName,
+          email,
+          phoneNumber,
+          pushToken,
+        } = user;
 
         const updates = {};
 
@@ -498,6 +505,9 @@ const resolvers = {
         }
         if (phoneNumber !== undefined) {
           updates.phoneNumber = phoneNumber;
+        }
+        if (pushToken !== undefined) {
+          updates.pushToken = pushToken;
         }
 
         await User.findByIdAndUpdate(userId, updates, { new: true });
