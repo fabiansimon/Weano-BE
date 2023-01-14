@@ -7,6 +7,8 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import twilio from "twilio";
 import nodemailer from "nodemailer";
+import { Expo } from "expo-server-sdk";
+
 dotenv.config();
 
 const startServer = async () => {
@@ -139,11 +141,48 @@ const startServer = async () => {
     }
   });
 
+  const sendPushnotifications = async () => {
+    let expo = new Expo({ accessToken: process.env.EXPO_TOKEN });
+    const tokens = ["ExponentPushToken[Uvo1J8JoGOZi6oVfGLwHAA]"];
+
+    let messages = [];
+    for (let token of tokens) {
+      if (!Expo.isExpoPushToken(token)) {
+        console.error(`Push token ${pushToken} is not a valid Expo push token`);
+        continue;
+      }
+
+      messages.push({
+        to: token,
+        sound: "default",
+        titlte: "Hey, it's time ⏰",
+        body: "Let's capture the moment, it only takes a second 📸",
+        data: {
+          upload_reminder_id: "63b322defdddac84ce420429",
+        },
+      });
+    }
+
+    let chunks = expo.chunkPushNotifications(messages);
+
+    for (let chunk of chunks) {
+      try {
+        await expo.sendPushNotificationsAsync(chunk);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
   app.listen(process.env.PORT, () =>
     console.log(
       `🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`
     )
   );
+
+  setTimeout(() => {
+    sendPushnotifications();
+  }, 3000);
 };
 
 startServer();

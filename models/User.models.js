@@ -33,6 +33,9 @@ const UserSchema = new mongoose.Schema(
     expenses: {
       type: Array,
     },
+    pushToken: {
+      type: String,
+    },
   },
   {
     timestamps: true,
