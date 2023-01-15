@@ -5,13 +5,13 @@ import {
 } from "apollo-server-express";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
-import Expense from "./models/Expense.model.js";
-import Image from "./models/Image.model.js";
-import Invitee from "./models/Invitee.model.js";
-import Poll from "./models/Poll.model.js";
-import Task from "./models/Task.model.js";
-import Trip from "./models/Trip.model.js";
-import User from "./models/User.models.js";
+import Expense from "./src/models/Expense.model.js";
+import Image from "./src/models/Image.model.js";
+import Invitee from "./src/models/Invitee.model.js";
+import Poll from "./src/models/Poll.model.js";
+import Task from "./src/models/Task.model.js";
+import Trip from "./src/models/Trip.model.js";
+import User from "./src/models/User.models.js";
 
 const resolvers = {
   Query: {
