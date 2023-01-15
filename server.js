@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import twilio from "twilio";
 import nodemailer from "nodemailer";
-import { sendPushNotifications } from "./src/utils/PushNotificationService.js";
+import { sendPushNotifications } from "./src/utils/pushNotificationService.js";
 dotenv.config();
 
 const startServer = async () => {
