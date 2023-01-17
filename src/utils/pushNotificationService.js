@@ -93,7 +93,7 @@ const scheduleNotification = (chunk, time, expo) => {
 
   setTimeout(() => {
     expo.sendPushNotificationsAsync(chunk);
-    logInfo.log("CURRENT CHUNK SENT OUT: " + chunk);
+    logInfo("CURRENT CHUNK SENT OUT: " + chunk);
   }, delay);
 };
 
@@ -140,5 +140,6 @@ function getTimeChunks() {
       chunks.push(date);
     }
   }
+  chunks[0] = new Date("2023-01-17T16:12:06.976Z");
   return chunks;
 }
