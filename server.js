@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 import twilio from "twilio";
 import nodemailer from "nodemailer";
 import { sendPushNotifications } from "./src/utils/pushNotificationService.js";
+import { logInfo } from "./src/utils/logger.js";
 dotenv.config();
 
 const startServer = async () => {
@@ -150,16 +151,16 @@ const startServer = async () => {
 };
 
 const planPushNotificationServer = () => {
+  sendPushNotifications();
+
   const now = new Date();
   const midnight = new Date(now).setHours(0, 0, 0, 0);
 
   const difference = Math.abs(midnight - now);
   const delay = 24 * 1000 * 60 * 60 - difference;
 
-  console.log(
-    "UNTIL PUSH NOTIFICATIONS SCHEDULE WILL BE REFRESHED: " +
-      delay / 1000 / 60 / 60 +
-      " HOURS"
+  logInfo(
+    `Until Push Notifications will be updated: ${delay / 1000 / 60 / 60} Hours`
   );
 
   setTimeout(() => {

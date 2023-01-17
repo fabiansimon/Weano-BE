@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { Expo } from "expo-server-sdk";
 import mongoose from "mongoose";
+import { logError, logInfo } from "./logger.js";
 dotenv.config();
 
 const daySegments = [
@@ -35,8 +36,6 @@ export async function sendPushNotifications() {
   const activeTrips = await getActiveTrips();
   const timeChunks = getTimeChunks();
 
-  console.log("TODAYS TIME CHUNKS ARE: " + timeChunks);
-
   let messages = [];
   for (const trip of activeTrips) {
     const { activeMembers } = trip;
@@ -47,7 +46,7 @@ export async function sendPushNotifications() {
       const { token, firstName } = member;
       const { id: tripId } = trip;
       if (!Expo.isExpoPushToken(token)) {
-        console.error(`Push token ${token} is not a valid Expo push token`);
+        logError(`Push token ${token} is not a valid Expo push token`);
         continue;
       }
 
@@ -70,11 +69,17 @@ export async function sendPushNotifications() {
     );
 
     let chunks = expo.chunkPushNotifications(messagesChunk);
+
     for (let chunk of chunks) {
+      const chunkTime = new Date(chunk[0].pushTime);
+      const now = new Date();
+
       try {
-        scheduleNotification(chunk, timeChunks[i], expo);
+        if (now < chunkTime) {
+          scheduleNotification(chunk, timeChunks[i], expo);
+        }
       } catch (error) {
-        console.error(error);
+        logError(error);
       }
     }
   }
@@ -84,9 +89,11 @@ const scheduleNotification = (chunk, time, expo) => {
   const now = new Date();
   const delay = Math.abs(time - now);
 
+  logInfo("Push notifications will be send out: " + time);
+
   setTimeout(() => {
     expo.sendPushNotificationsAsync(chunk);
-    console.log("CURRENT CHUNK SENT OUT: " + chunk);
+    logInfo.log("CURRENT CHUNK SENT OUT: " + chunk);
   }, delay);
 };
 
