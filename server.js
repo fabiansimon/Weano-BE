@@ -68,6 +68,7 @@ const startServer = async () => {
         .verifications.create({ to, channel: "sms" })
         .then((verification) => {
           res.json(verification);
+          logInfo("Verification sent out to: " + to);
         })
         .catch((err) => {
           res.json(err);
@@ -86,6 +87,7 @@ const startServer = async () => {
         .verificationChecks.create({ to, code })
         .then((verification) => {
           res.json(verification);
+          logInfo("Verification check sent by: " + to);
         })
         .catch((err) => {
           res.json(err);
@@ -134,6 +136,7 @@ const startServer = async () => {
         if (err) {
           return res.json(err);
         }
+        logInfo("Invitation email sent to: " + formattedReceivers);
         return res.json("Email sent: " + info.response);
       });
     } catch (error) {
