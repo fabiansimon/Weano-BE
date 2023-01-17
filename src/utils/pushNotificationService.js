@@ -39,10 +39,12 @@ export async function sendPushNotifications() {
   let messages = [];
   for (const trip of activeTrips) {
     const { activeMembers } = trip;
-    const members = await getPushTokens(activeMembers);
+    let members = await getPushTokens(activeMembers);
+    members = shuffleMembers(members);
 
     for (var i = 0; i < timeChunks.length; i++) {
       const member = members[i % members.length];
+
       const { token, firstName } = member;
       const { id: tripId } = trip;
       if (!Expo.isExpoPushToken(token)) {
@@ -85,7 +87,17 @@ export async function sendPushNotifications() {
   }
 }
 
-const scheduleNotification = (chunk, time, expo) => {
+function shuffleMembers(members) {
+  for (let i = members.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = members[i];
+    members[i] = members[j];
+    members[j] = temp;
+  }
+  return members;
+}
+
+function scheduleNotification(chunk, time, expo) {
   const now = new Date();
   const delay = Math.abs(time - now);
 
@@ -95,7 +107,7 @@ const scheduleNotification = (chunk, time, expo) => {
     expo.sendPushNotificationsAsync(chunk);
     logInfo("CURRENT CHUNK SENT OUT: " + time);
   }, delay);
-};
+}
 
 async function getActiveTrips() {
   const Trips = db.model("trip");
