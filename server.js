@@ -167,7 +167,6 @@ const planPushNotificationServer = () => {
   );
 
   setTimeout(() => {
-    sendPushNotifications();
     planPushNotificationServer();
   }, delay);
 };
