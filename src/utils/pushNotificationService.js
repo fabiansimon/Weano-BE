@@ -34,6 +34,11 @@ const db = mongoose.connection;
 export async function sendPushNotifications() {
   let expo = new Expo({ accessToken: process.env.EXPO_TOKEN });
   const activeTrips = await getActiveTrips();
+
+  if (activeTrips.length <= 0) {
+    logInfo("No active trips");
+    return;
+  }
   const timeChunks = getTimeChunks();
 
   let messages = [];
