@@ -168,6 +168,19 @@ const resolvers = {
           },
         });
 
+        const tripData = await Promise.all(
+          trips.map(async (trip) => {
+            let _images = await Image.find({
+              _id: {
+                $in: trip.images,
+              },
+            });
+
+            trip.images = _images;
+            return trip;
+          })
+        );
+
         const currentTimestamp = Date.now() / 1000;
         let recapTimestamp = new Date();
         recapTimestamp.setFullYear(recapTimestamp.getFullYear() - 1);
@@ -238,7 +251,7 @@ const resolvers = {
 
         return {
           userData,
-          trips,
+          trips: tripData,
           images,
           activeTrip,
           recapTrip,

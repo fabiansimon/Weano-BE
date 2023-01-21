@@ -42,7 +42,6 @@ const typeDefs = gql`
     title: String
     location: Location
     description: String
-    activeMembers: [User]
     dateRange: DateRange
     images: [Image]
   }
@@ -80,7 +79,7 @@ const typeDefs = gql`
 
   type InitDataResponse {
     userData: User
-    trips: [Trip]
+    trips: [SimplifiedTrip]
     activeTrip: ConcatedTrip
     recapTrip: Trip
     images: [Image]
