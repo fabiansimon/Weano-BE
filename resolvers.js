@@ -270,7 +270,7 @@ const resolvers = {
           },
         });
 
-        images = images.map((image, index) => {
+        images = images.map((image) => {
           return {
             ...image._doc,
             author: authors.filter((author) => author._id == image.author)[0],
@@ -290,11 +290,24 @@ const resolvers = {
       try {
         const userData = await User.findById(userId);
 
-        const trips = await Trip.find({
+        const tripData = await Trip.find({
           _id: {
             $in: userData.trips,
           },
         });
+
+        const trips = await Promise.all(
+          tripData.map(async (trip) => {
+            let _images = await Image.find({
+              _id: {
+                $in: trip.images,
+              },
+            });
+
+            trip.images = _images;
+            return trip;
+          })
+        );
 
         return trips;
       } catch (error) {

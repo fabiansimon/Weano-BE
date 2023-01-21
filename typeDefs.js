@@ -36,13 +36,23 @@ const typeDefs = gql`
     latlon: [Float]
   }
 
+  type SimplifiedTrip {
+    id: ID
+    thumbnailUri: String
+    title: String
+    location: Location
+    description: String
+    activeMembers: [User]
+    dateRange: DateRange
+    images: [Image]
+  }
+
   type Trip {
     id: ID
     thumbnailUri: String
     title: String
     description: String
     location: Location
-    invitees: [Invitee]
     activeMembers: [User]
     dateRange: DateRange
     expenses: [Expense]
@@ -150,7 +160,7 @@ const typeDefs = gql`
     # trip queries
     getAllTrips: [Trip]
     getTripById(tripId: String): ConcatedTrip
-    getTripsForUser: [Trip]
+    getTripsForUser: [SimplifiedTrip]
     getInvitationTripData(tripId: String): InvitationResponse
     getImagesFromTrip(tripId: String): [TripImagesResponse]
   }
