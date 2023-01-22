@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import Expense from "./src/models/Expense.model.js";
 import Image from "./src/models/Image.model.js";
-import Invitee from "./src/models/Invitee.model.js";
 import Poll from "./src/models/Poll.model.js";
 import Task from "./src/models/Task.model.js";
 import Trip from "./src/models/Trip.model.js";
@@ -99,12 +98,6 @@ const resolvers = {
           .where("creatorId")
           .equals(userId);
 
-        const invitees = await Invitee.find({
-          _id: {
-            $in: trip.invitees,
-          },
-        });
-
         const {
           _id: id,
           hostId,
@@ -122,7 +115,6 @@ const resolvers = {
           title,
           description,
           location,
-          invitees,
           dateRange,
           activeMembers,
           expenses,
@@ -404,10 +396,6 @@ const resolvers = {
         throw new ApolloError(error);
       }
     },
-    deleteAllUsers: async () => {
-      await User.deleteMany({});
-      return true;
-    },
 
     createTrip: async (_, args, { userId }) => {
       if (!userId) {
@@ -415,28 +403,7 @@ const resolvers = {
       }
 
       try {
-        const { title, location, invitees, dateRange } = args.trip;
-        let inviteeIds = [];
-
-        for (const email of invitees) {
-          const res = await Invitee.find({ email: email });
-
-          // Check if Invitee already exists
-          if (res.length > 0) {
-            inviteeIds.push(res[0]._id.toString());
-          } else {
-            const invitee = new Invitee({
-              email,
-              status: "PENDING",
-              firstName: "",
-              lastName: "",
-            });
-
-            const { _id } = await invitee.save();
-
-            inviteeIds.push(_id.toString());
-          }
-        }
+        const { title, location, dateRange } = args.trip;
 
         const poll = new Poll({
           creatorId: userId,
@@ -456,7 +423,6 @@ const resolvers = {
           title,
           description: "",
           location: totalLocation,
-          invitees: inviteeIds,
           dateRange,
           activeMembers: [userId],
           destinationPoll: pollId.toString(),
@@ -473,18 +439,45 @@ const resolvers = {
       }
     },
 
-    deleteTrip: async (_, { id }) => {
+    deleteTripById: async (_, { tripId }, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
+
       try {
-        await Trip.findByIdAndDelete(id);
+        const trip = await Trip.findById(tripId);
+
+        const {
+          _id,
+          mutualTasks,
+          privateTasks,
+          destinationPoll,
+          polls: otherPolls,
+          activeMembers,
+        } = trip;
+
+        const tasks = mutualTasks.concat(privateTasks);
+
+        let polls;
+        if (destinationPoll) {
+          polls = otherPolls.concat(destinationPoll);
+        }
+
+        await Task.deleteMany({ _id: { $in: tasks } });
+        await Poll.deleteMany({ _id: { $in: polls } });
+
+        await activeMembers.forEach(async (member) => {
+          await User.findByIdAndUpdate(member, {
+            $pull: { trips: _id.toString() },
+          });
+        });
+
+        await Trip.findByIdAndDelete(tripId);
+
         return true;
       } catch (error) {
         throw new ApolloError(error);
       }
-    },
-
-    deleteAllTrips: async () => {
-      await Trip.deleteMany({});
-      return "Trips successfully deleted";
     },
 
     deleteUser: async (_, __, { userId }) => {
@@ -493,7 +486,41 @@ const resolvers = {
       }
 
       try {
+        const user = await User.findById(userId);
+
+        const { trips } = user;
+
+        await trips.forEach(async (trip) => {
+          // const tripExpenses = expenses
+          //   .map((e) => {
+          //     if (e.trip === trip) {
+          //       return e.expense;
+          //     }
+          //   })
+          //   .filter(Boolean);
+
+          const tripData = await Trip.findByIdAndUpdate(trip, {
+            $pull: { activeMembers: { userId } },
+          });
+
+          if (!tripData) {
+            return;
+          }
+
+          const { _id, activeMembers, hostId } = tripData;
+
+          // Check if it was last user || if not reassign host
+          if (activeMembers.length <= 0) {
+            await Trip.findByIdAndDelete(_id.toString());
+          } else if (hostId === userId) {
+            await Trip.findByIdAndUpdate(trip, {
+              $set: { hostId: activeMembers[0] },
+            });
+          }
+        });
+
         await User.findByIdAndDelete(userId);
+
         return true;
       } catch (error) {
         throw new ApolloError(error);
@@ -555,7 +582,6 @@ const resolvers = {
           title,
           description,
           location,
-          invitees,
           activeMembers,
           dateRange,
           images,
@@ -579,9 +605,7 @@ const resolvers = {
             votedBy: [],
           };
         }
-        if (invitees !== undefined) {
-          updates.invitees = invitees;
-        }
+
         if (activeMembers !== undefined) {
           updates.activeMembers = activeMembers;
         }
@@ -596,70 +620,6 @@ const resolvers = {
         }
 
         await Trip.findByIdAndUpdate(tripId, updates, { new: true });
-        return true;
-      } catch (error) {
-        throw new ApolloError(error);
-      }
-    },
-
-    addInvitees: async (_, args, { userId }) => {
-      if (!userId) {
-        throw new AuthenticationError("Not authenticated");
-      }
-
-      try {
-        const { tripId, emails } = args.data;
-
-        for (const email of emails) {
-          let id;
-          const res = await Invitee.find({ email: email });
-
-          // Check if Invitee already exists
-          if (res.length > 0) {
-            id = res[0]._id.toString();
-          } else {
-            const invitee = new Invitee({
-              email,
-              status: "PENDING",
-              firstName: "",
-              lastName: "",
-            });
-
-            const { _id } = await invitee.save();
-
-            id = _id.toString();
-          }
-
-          await Trip.findByIdAndUpdate(tripId, {
-            $addToSet: { invitees: id },
-          });
-        }
-
-        return true;
-      } catch (error) {
-        throw new ApolloError(error);
-      }
-    },
-
-    removeInvitee: async (_, args, { userId }) => {
-      if (!userId) {
-        throw new AuthenticationError("Not authenticated");
-      }
-
-      try {
-        const { tripId, email } = args.data;
-
-        const res = await Invitee.find({ email: email });
-        if (res.length <= 0) {
-          throw new ApolloError("No Invitee found with that email");
-        }
-
-        const { _id } = res[0];
-
-        await Trip.findByIdAndUpdate(tripId, {
-          $pull: { invitees: _id.toString() },
-        });
-
         return true;
       } catch (error) {
         throw new ApolloError(error);
@@ -810,21 +770,35 @@ const resolvers = {
       }
     },
 
-    // voteForPoll: async (_, args, { userId }) => {
-    //   if (!userId) {
-    //     throw new AuthenticationError("Not authenticated");
-    //   }
+    voteForPoll: async (_, args, { userId }) => {
+      if (!userId) {
+        throw new AuthenticationError("Not authenticated");
+      }
 
-    //   try {
-    //     let { pollId } = args.poll;
-    //     await Poll.findByIdAndUpdate(pollId, {
-    //       $push: { polls: _id.toString() },
-    //     });
-    //     return _id;
-    //   } catch (error) {
-    //     throw new ApolloError(error);
-    //   }
-    // }
+      try {
+        let { pollId, optionId } = args.data;
+        const poll = await Poll.findById(pollId);
+
+        let { options } = poll;
+        const oIndex = options.findIndex((option) => option.id === optionId);
+
+        const uIndex = options[oIndex].votes.indexOf(userId);
+
+        if (uIndex === -1) {
+          options[oIndex].votes.push(userId);
+        } else {
+          options[oIndex].votes.splice(uIndex, 1);
+        }
+
+        await Poll.findByIdAndUpdate(pollId, {
+          $set: { options },
+        });
+
+        return true;
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
 
     createPoll: async (_, args, { userId }) => {
       if (!userId) {

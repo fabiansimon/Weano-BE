@@ -23,10 +23,10 @@ logger.add(
 );
 
 const logInfo = (message) => {
-  logger.info(`${message}\n`);
+  logger.info(`${new Date()}: ${message}\n`);
 };
 const logError = (message) => {
-  logger.error(`${message}\n`);
+  logger.error(`${new Date()}: ${message}\n`);
 };
 
 export { logInfo, logError };
