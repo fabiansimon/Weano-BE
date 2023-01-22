@@ -36,7 +36,7 @@ export async function sendPushNotifications() {
   const activeTrips = await getActiveTrips();
 
   if (activeTrips.length <= 0) {
-    logInfo("No active trips");
+    logInfo("No Active trips");
     return;
   }
   const timeChunks = getTimeChunks();

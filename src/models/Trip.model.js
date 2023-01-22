@@ -33,10 +33,6 @@ const TripSchema = new mongoose.Schema(
     privateTasks: {
       type: Array,
     },
-    invitees: {
-      type: Array,
-      required: true,
-    },
     activeMembers: {
       type: Array,
       required: true,

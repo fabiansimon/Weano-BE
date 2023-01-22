@@ -24,13 +24,6 @@ const typeDefs = gql`
     endDate: Int
   }
 
-  type Invitee {
-    email: String!
-    status: String
-    firstName: String
-    lastName: String
-  }
-
   type Location {
     placeName: String
     latlon: [Float]
@@ -92,7 +85,6 @@ const typeDefs = gql`
     title: String
     description: String
     location: Location
-    invitees: [Invitee]
     activeMembers: [User]
     dateRange: DateRange
     expenses: [Expense]
@@ -173,7 +165,6 @@ const typeDefs = gql`
     title: String
     description: String
     location: LocationInput
-    invitees: [String]
     dateRange: DateRangeInput
   }
 
@@ -237,16 +228,6 @@ const typeDefs = gql`
     votes: [String]
   }
 
-  input AddInviteeInput {
-    tripId: String!
-    emails: [String]!
-  }
-
-  input RemoveInviteeInput {
-    tripId: String!
-    email: String!
-  }
-
   input DeleteInput {
     tripId: String!
     id: String!
@@ -260,7 +241,6 @@ const typeDefs = gql`
     description: String
     location: LocationInput
     dateRange: DateRangeInput
-    # invitees:
     # activeMembers
     # images
     # expenses
@@ -271,11 +251,15 @@ const typeDefs = gql`
     isDone: Boolean!
   }
 
+  input VoteInput {
+    pollId: String!
+    optionId: String!
+  }
+
   type Mutation {
     # User
     registerUser(user: RegisterUserInput!): String!
     loginUser(user: LoginUserInput!): String!
-    deleteAllUsers: Boolean!
     deleteUser: Boolean
     joinTrip(tripId: ID): Boolean
     updateUser(user: UserInput): Boolean
@@ -283,11 +267,8 @@ const typeDefs = gql`
     # Trip
     uploadTripImage(image: ImageInput!): Boolean
     createTrip(trip: TripInput): String!
-    deleteTrip(id: ID): String
-    deleteAllTrips: String
+    deleteTripById(tripId: ID): Boolean
     updateTrip(trip: UpdatedTripInput!): Boolean
-    addInvitees(data: AddInviteeInput!): Boolean
-    removeInvitee(data: RemoveInviteeInput!): Boolean
 
     # Expenses
     createExpense(expense: ExpenseInput!): String
@@ -296,6 +277,7 @@ const typeDefs = gql`
     # Polls
     createPoll(poll: PollInput!): String
     deletePoll(data: DeleteInput!): Boolean
+    voteForPoll(data: VoteInput!): Boolean
 
     # Tasks
     createTask(task: TaskInput!): String
