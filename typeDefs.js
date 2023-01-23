@@ -36,6 +36,7 @@ const typeDefs = gql`
     location: Location
     description: String
     dateRange: DateRange
+    expensesTotal: Int
     images: [Image]
   }
 
@@ -73,8 +74,6 @@ const typeDefs = gql`
   type InitDataResponse {
     userData: User
     trips: [SimplifiedTrip]
-    activeTrip: ConcatedTrip
-    recapTrip: Trip
     images: [Image]
   }
 

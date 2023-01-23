@@ -160,6 +160,7 @@ const resolvers = {
           },
         });
 
+        const now = Date.now() / 1000;
         const tripData = await Promise.all(
           trips.map(async (trip) => {
             let _images = await Image.find({
@@ -168,72 +169,30 @@ const resolvers = {
               },
             });
 
+            const isActive =
+              trip.dateRange.startDate < now && trip.dateRange.endDate > now;
+
+            let totalAmount = 0;
+            if (isActive) {
+              const _expenses = await Expense.find({
+                _id: {
+                  $in: trip.expenses,
+                },
+              });
+
+              var amount = 0;
+              for (let expense of _expenses) {
+                amount = amount + expense.amount;
+              }
+
+              totalAmount = amount;
+            }
+
+            trip.expensesTotal = totalAmount;
             trip.images = _images;
             return trip;
           })
         );
-
-        const currentTimestamp = Date.now() / 1000;
-        let recapTimestamp = new Date();
-        recapTimestamp.setFullYear(recapTimestamp.getFullYear() - 1);
-        recapTimestamp = Date.parse(recapTimestamp) / 1000;
-
-        let activeTrip;
-        let recapTrip;
-
-        for (var i = 0; i < trips.length; i++) {
-          const { startDate, endDate } = trips[i].dateRange;
-
-          if (startDate < currentTimestamp && endDate > currentTimestamp) {
-            activeTrip = trips[i];
-          }
-
-          if (startDate < recapTimestamp && endDate > recapTimestamp) {
-            recapTrip = trips[i];
-          }
-
-          if (activeTrip && recapTrip) break;
-        }
-
-        if (activeTrip) {
-          const activeTripExpenses = await Expense.find({
-            _id: {
-              $in: activeTrip.expenses,
-            },
-          });
-
-          const activeTripPolls = await Poll.find({
-            _id: {
-              $in: activeTrip.polls,
-            },
-          });
-
-          const activeTripActiveMembers = await User.find({
-            _id: {
-              $in: activeTrip.activeMembers,
-            },
-          });
-
-          const activeTripMutualTasks = await Task.find({
-            _id: {
-              $in: activeTrip.mutualTasks,
-            },
-          });
-
-          const activeTripPrivateTasks = await Task.find({
-            _id: {
-              $in: activeTrip.privateTasks,
-            },
-          })
-            .where("creatorId")
-            .equals(userId);
-
-          activeTrip.polls = activeTripPolls || [];
-          activeTrip.expenses = activeTripExpenses || [];
-          activeTrip.mutualTasks = activeTripMutualTasks || [];
-          activeTrip.privateTasks = activeTripPrivateTasks || [];
-          activeTrip.activeMembers = activeTripActiveMembers || [];
-        }
 
         const images = await Image.find({
           _id: {
@@ -245,8 +204,6 @@ const resolvers = {
           userData,
           trips: tripData,
           images,
-          activeTrip,
-          recapTrip,
         };
       } catch (error) {
         throw new ApolloError(error);
