@@ -161,35 +161,51 @@ const resolvers = {
         });
 
         const now = Date.now() / 1000;
+        let recapTimestamp = new Date();
+        recapTimestamp.setFullYear(recapTimestamp.getFullYear() - 1);
+        recapTimestamp = Date.parse(recapTimestamp) / 1000;
+
         const tripData = await Promise.all(
           trips.map(async (trip) => {
+            const { dateRange } = trip;
             let _images = await Image.find({
               _id: {
                 $in: trip.images,
               },
             });
+            let _activeMembers = await User.find({
+              _id: {
+                $in: trip.activeMembers,
+              },
+            });
 
-            const isActive =
-              trip.dateRange.startDate < now && trip.dateRange.endDate > now;
+            // const isActive =
+            //   dateRange.startDate < now && dateRange.endDate > now;
+            // const isRewind =
+            //   dateRange.startDate < recapTimestamp && dateRange.endDate < now;
+            const isUpcoming =
+              ((dateRange.startDate - now) / 86400).toFixed(0) < 7;
 
-            let totalAmount = 0;
-            if (isActive) {
-              const _expenses = await Expense.find({
+            if (isUpcoming) {
+              const mutualTasks = await Task.find({
                 _id: {
-                  $in: trip.expenses,
+                  $in: trip.mutualTasks,
                 },
               });
 
-              var amount = 0;
-              for (let expense of _expenses) {
-                amount = amount + expense.amount;
-              }
+              const privateTasks = await Task.find({
+                _id: {
+                  $in: trip.privateTasks,
+                },
+              })
+                .where("creatorId")
+                .equals(userId);
 
-              totalAmount = amount;
+              trip.openTasks = [...mutualTasks, ...privateTasks];
             }
 
-            trip.expensesTotal = totalAmount;
             trip.images = _images;
+            trip.activeMembers = _activeMembers;
             return trip;
           })
         );
