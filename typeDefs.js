@@ -36,8 +36,9 @@ const typeDefs = gql`
     location: Location
     description: String
     dateRange: DateRange
-    expensesTotal: Int
     images: [Image]
+    openTasks: [Task]
+    activeMembers: [User]
   }
 
   type Trip {
