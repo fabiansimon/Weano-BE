@@ -269,6 +269,7 @@ const typeDefs = gql`
     createTrip(trip: TripInput): String!
     deleteTripById(tripId: ID): Boolean
     updateTrip(trip: UpdatedTripInput!): Boolean
+    removeUserFromTrip(data: DeleteInput!): Boolean
 
     # Expenses
     createExpense(expense: ExpenseInput!): String

@@ -20,6 +20,7 @@ import { getInvitationTripData } from "./src/queries/getInvitationTripData.js";
 import { getTripById } from "./src/queries/getTripById.js";
 import { getTripsForUser } from "./src/queries/getTripsForUser.js";
 import { getUserInitData } from "./src/queries/getUserInitData.js";
+import { removeUserFromTrip } from "./src/mutations/removeUserFromTrip.js";
 
 const resolvers = {
   Query: {
@@ -48,6 +49,7 @@ const resolvers = {
     createPoll,
     createTask,
     updateTask,
+    removeUserFromTrip,
   },
 };
 
