@@ -63,7 +63,8 @@ export async function sendPushNotifications() {
         title: `Hey ${firstName}, it's time ⏰`,
         body: "Let's capture the moment, it only takes a second 📸",
         data: {
-          upload_reminder_id: tripId,
+          type: "upload_reminder",
+          tripId: tripId,
         },
         pushTime: timeChunks[i],
       });
@@ -157,6 +158,8 @@ function getTimeChunks() {
       chunks.push(date);
     }
   }
-  // chunks[0] = new Date("2023-01-17T16:12:06.976Z");
+  // const debugDate = new Date();
+  // debugDate.setSeconds(debugDate.getSeconds() + 2);
+  // chunks[0] = debugDate;
   return chunks;
 }
