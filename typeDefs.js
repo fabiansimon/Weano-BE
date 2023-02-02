@@ -256,6 +256,14 @@ const typeDefs = gql`
     optionId: String!
   }
 
+  input ReminderInput {
+    receivers: [String]!
+    title: String!
+    description: String!
+    type: String!
+    tripId: String!
+  }
+
   type Mutation {
     # User
     registerUser(user: RegisterUserInput!): String!
@@ -284,6 +292,9 @@ const typeDefs = gql`
     createTask(task: TaskInput!): String
     deleteTask(data: DeleteInput!): Boolean
     updateTask(data: UpdateTaskInput!): Boolean
+
+    # Push Notifications
+    sendReminder(data: ReminderInput!): Boolean
   }
 `;
 
