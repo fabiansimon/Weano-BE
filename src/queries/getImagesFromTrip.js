@@ -6,7 +6,7 @@ import {
   daySegments,
   DAILY_IMAGE_CAP,
   IMAGES_PER_CHUNK,
-} from "../utils/PushNotificationService.js";
+} from "../utils/pushNotificationService.js";
 
 export const getImagesFromTrip = async (_, { tripId }, { userId }) => {
   if (!userId) {
