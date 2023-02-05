@@ -128,13 +128,17 @@ const typeDefs = gql`
   }
 
   type TripImagesResponse {
+    images: [TripImages]
+    userFreeImages: Int
+  }
+
+  type TripImages {
     createdAt: String
     uri: String!
     title: String
     description: String
     author: Author
   }
-
   type Author {
     firstName: String
     lastName: String
@@ -153,7 +157,7 @@ const typeDefs = gql`
     getTripById(tripId: String): ConcatedTrip
     getTripsForUser: [SimplifiedTrip]
     getInvitationTripData(tripId: String): InvitationResponse
-    getImagesFromTrip(tripId: String): [TripImagesResponse]
+    getImagesFromTrip(tripId: String): TripImagesResponse
   }
 
   input DateRangeInput {

@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { logError, logInfo } from "./logger.js";
 dotenv.config();
 
-const daySegments = [
+export const daySegments = [
   {
     start: 8,
     end: 11,
@@ -27,8 +27,10 @@ const daySegments = [
   },
 ];
 
-const DAILY_IMAGE_CAP = 10;
-const IMAGES_PER_CHUNK = (DAILY_IMAGE_CAP / daySegments.length).toFixed(0);
+export const DAILY_IMAGE_CAP = 10;
+export const IMAGES_PER_CHUNK = (DAILY_IMAGE_CAP / daySegments.length).toFixed(
+  0
+);
 const db = mongoose.connection;
 
 export async function sendPushNotifications() {
@@ -111,7 +113,7 @@ function scheduleNotification(chunk, time, expo) {
 
   setTimeout(() => {
     expo.sendPushNotificationsAsync(chunk);
-    logInfo("CURRENT CHUNK SENT OUT: " + time);
+    logInfo("Current chunk sent out: " + time);
   }, delay);
 }
 

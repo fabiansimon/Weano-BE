@@ -41,6 +41,7 @@ export const getUserInitData = async (_, __, { userId }) => {
         //   dateRange.startDate < now && dateRange.endDate > now;
         // const isRewind =
         //   dateRange.startDate < recapTimestamp && dateRange.endDate < now;
+
         const isUpcoming = ((dateRange.startDate - now) / 86400).toFixed(0) < 7;
 
         if (isUpcoming) {
