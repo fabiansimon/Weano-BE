@@ -1,4 +1,5 @@
 import { ApolloError, AuthenticationError } from "apollo-server-express";
+import { createLogger } from "winston";
 import Image from "../models/Image.model.js";
 import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
@@ -48,7 +49,12 @@ export const getImagesFromTrip = async (_, { tripId }, { userId }) => {
       }
     }
 
-    const imagesToAdd = (totalImages / activeMembers.length).toFixed(0);
+    let userFreeImages;
+    if (images.length >= totalImages) {
+      userFreeImages = 0;
+    } else {
+      userFreeImages = ((totalImages-images.length) / activeMembers.length).toFixed(0);
+    }
 
     images = images.map((image) => {
       return {
@@ -59,7 +65,7 @@ export const getImagesFromTrip = async (_, { tripId }, { userId }) => {
 
     return {
       images,
-      userFreeImages: imagesToAdd,
+      userFreeImages,
     };
   } catch (error) {
     throw new ApolloError(error);
