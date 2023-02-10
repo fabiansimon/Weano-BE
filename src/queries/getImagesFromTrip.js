@@ -15,11 +15,7 @@ export const getImagesFromTrip = async (_, { tripId }, { userId }) => {
   }
 
   try {
-    const {
-      images: tripImages,
-      dateRange,
-      activeMembers,
-    } = await Trip.findById(tripId);
+    const { images: tripImages, assignedImages } = await Trip.findById(tripId);
 
     let images = await Image.find({
       _id: {
@@ -35,25 +31,17 @@ export const getImagesFromTrip = async (_, { tripId }, { userId }) => {
       },
     });
 
-    const now = new Date() / 1000;
-    const tripLength = Math.abs((dateRange.startDate - now) / 86400).toFixed(0);
-
-    let totalImages = tripLength * DAILY_IMAGE_CAP;
-
-    const currHour = new Date().getHours();
-    for (var i = 0; i < daySegments.length; i++) {
-      const { end } = daySegments[i];
-      if (end > currHour) break;
-      else {
-        totalImages += parseInt(IMAGES_PER_CHUNK);
-      }
-    }
-
     let userFreeImages;
-    if (images.length >= totalImages) {
+
+    const postedAmount = images.filter(
+      (image) => image.author === userId
+    ).length;
+    const assignedAmount = assignedImages.filter((id) => id === userId).length;
+
+    if (postedAmount > assignedAmount) {
       userFreeImages = 0;
     } else {
-      userFreeImages = ((totalImages-images.length) / activeMembers.length).toFixed(0);
+      userFreeImages = assignedAmount - postedAmount;
     }
 
     images = images.map((image) => {

@@ -32,6 +32,7 @@ export const createTrip = async (_, args, { userId }) => {
       dateRange,
       activeMembers: [userId],
       destinationPoll: pollId.toString(),
+      assignedImages: [],
     });
 
     const { _id } = await trip.save();

@@ -54,6 +54,9 @@ const TripSchema = new mongoose.Schema(
     polls: {
       type: Array,
     },
+    assignedImages: {
+      type: Array,
+    },
   },
   {
     timestamps: true,
