@@ -52,7 +52,7 @@ export async function sendPushNotifications() {
     for (var i = 0; i < timeChunks.length; i++) {
       const member = members[i % members.length];
 
-      const { token, firstName } = member;
+      const { token, firstName, id } = member;
       const { id: tripId } = trip;
       if (!Expo.isExpoPushToken(token)) {
         logError(`Push token ${token} is not a valid Expo push token`);
@@ -69,6 +69,7 @@ export async function sendPushNotifications() {
           tripId: tripId,
         },
         pushTime: timeChunks[i],
+        userId: id,
       });
     }
   }
@@ -112,9 +113,23 @@ function scheduleNotification(chunk, time, expo) {
   logInfo("Push notifications will be send out: " + time);
 
   setTimeout(() => {
+    updateAssignedImages(chunk);
     expo.sendPushNotificationsAsync(chunk);
     logInfo("Current chunk sent out: " + time);
   }, delay);
+}
+
+async function updateAssignedImages(chunk) {
+  const Trips = db.model("trip");
+
+  for (const item of chunk) {
+    const { tripId } = item.data;
+    const { userId } = item;
+
+    await Trips.findByIdAndUpdate(tripId, {
+      $push: { assignedImages: userId },
+    });
+  }
 }
 
 async function getActiveTrips() {
@@ -142,6 +157,7 @@ async function getPushTokens(users) {
     return {
       token: user.pushToken,
       firstName: user.firstName,
+      id: user.id,
     };
   });
   return pushToken;
