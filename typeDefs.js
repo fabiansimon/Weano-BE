@@ -145,6 +145,11 @@ const typeDefs = gql`
     avatarUri: String
   }
 
+  type PollResponse {
+    id: String
+    options: [PollOption]
+  }
+
   type Query {
     # user queries
     me: User
@@ -288,7 +293,7 @@ const typeDefs = gql`
     deleteExpense(data: DeleteInput!): Boolean
 
     # Polls
-    createPoll(poll: PollInput!): String
+    createPoll(poll: PollInput!): PollResponse
     deletePoll(data: DeleteInput!): Boolean
     voteForPoll(data: VoteInput!): Boolean
 

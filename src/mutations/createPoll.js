@@ -35,7 +35,10 @@ export const createPoll = async (_, args, { userId }) => {
     await Trip.findByIdAndUpdate(tripId, {
       $push: { polls: _id.toString() },
     });
-    return _id;
+    return {
+      id: _id,
+      options,
+    };
   } catch (error) {
     throw new ApolloError(error);
   }
