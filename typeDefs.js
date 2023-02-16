@@ -133,6 +133,7 @@ const typeDefs = gql`
   }
 
   type TripImages {
+    _id: String
     createdAt: String
     uri: String!
     title: String
