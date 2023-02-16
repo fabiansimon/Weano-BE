@@ -22,6 +22,7 @@ import { getTripsForUser } from "./src/queries/getTripsForUser.js";
 import { getUserInitData } from "./src/queries/getUserInitData.js";
 import { removeUserFromTrip } from "./src/mutations/removeUserFromTrip.js";
 import { sendReminder } from "./src/mutations/sendReminder.js";
+import { deleteImage } from "./src/mutations/deleteImage.js";
 
 const resolvers = {
   Query: {
@@ -51,6 +52,7 @@ const resolvers = {
     createTask,
     updateTask,
     removeUserFromTrip,
+    deleteImage,
     sendReminder,
   },
 };
