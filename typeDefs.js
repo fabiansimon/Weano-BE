@@ -140,6 +140,7 @@ const typeDefs = gql`
     author: Author
   }
   type Author {
+    _id: String
     firstName: String
     lastName: String
     avatarUri: String
