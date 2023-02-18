@@ -133,6 +133,7 @@ const typeDefs = gql`
   }
 
   type TripImages {
+    _id: String
     createdAt: String
     uri: String!
     title: String
@@ -283,7 +284,6 @@ const typeDefs = gql`
     updateUser(user: UserInput): Boolean
 
     # Trip
-    uploadTripImage(image: ImageInput!): Boolean
     createTrip(trip: TripInput): String!
     deleteTripById(tripId: ID): Boolean
     updateTrip(trip: UpdatedTripInput!): Boolean
@@ -305,6 +305,10 @@ const typeDefs = gql`
 
     # Push Notifications
     sendReminder(data: ReminderInput!): Boolean
+
+    # Images
+    uploadTripImage(image: ImageInput!): Boolean
+    deleteImage(data: DeleteInput!): Boolean
   }
 `;
 
