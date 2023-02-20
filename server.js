@@ -74,7 +74,7 @@ const startServer = async () => {
         .verifications.create({ to, channel: "sms" })
         .then((verification) => {
           res.json(verification);
-          logError("Verification sent out to: " + to);
+          logInfo("Verification sent out to: " + to);
         })
         .catch((err) => {
           logError("ERROR: " + err);
@@ -101,7 +101,7 @@ const startServer = async () => {
         .verificationChecks.create({ to, code })
         .then((verification) => {
           res.json(verification);
-          logError("Verification check sent by: " + to);
+          logInfo("Verification check sent by: " + to);
         })
         .catch((err) => {
           logError("ERROR: " + err);
