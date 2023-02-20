@@ -61,6 +61,11 @@ const startServer = async () => {
 
   app.get("/verify/:to", async (req, res) => {
     const { to } = req.params;
+    const appKey = req.headers["app-key"];
+
+    if (!appKey || appKey !== process.env.APP_TOKEN) {
+      return res.sendStatus(401);
+    }
 
     try {
       twilioClient.verify
@@ -71,15 +76,22 @@ const startServer = async () => {
           logInfo("Verification sent out to: " + to);
         })
         .catch((err) => {
+          logInfo("ERROR: " + err);
           res.json(err);
         });
     } catch (error) {
-      res.json(error);
+      logInfo("ERROR: " + error);
+      return res.json(error);
     }
   });
 
   app.get("/check/:to/:code", async (req, res) => {
     const { to, code } = req.params;
+    const appKey = req.headers["app-key"];
+
+    if (!appKey || appKey !== process.env.APP_TOKEN) {
+      return res.sendStatus(401);
+    }
 
     try {
       twilioClient.verify
@@ -90,9 +102,11 @@ const startServer = async () => {
           logInfo("Verification check sent by: " + to);
         })
         .catch((err) => {
+          logInfo("ERROR: " + err);
           res.json(err);
         });
     } catch (error) {
+      logInfo("ERROR: " + error);
       res.json(error);
     }
   });
@@ -114,6 +128,12 @@ const startServer = async () => {
 
   app.get("/invite/:receivers/:tripId", async (req, res) => {
     const { receivers, tripId } = req.params;
+    const appKey = req.headers["app-key"];
+
+    if (!appKey || appKey !== process.env.APP_TOKEN) {
+      return res.sendStatus(401);
+    }
+
     const formattedReceivers = receivers.split("&").toString();
 
     const transporter = nodemailer.createTransport({
