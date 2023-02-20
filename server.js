@@ -61,9 +61,9 @@ const startServer = async () => {
 
   app.get("/verify/:to", async (req, res) => {
     const { to } = req.params;
-    const appKey = req.headers["app-key"];
+    const appToken = req.headers["app-token"];
 
-    if (!appKey || appKey !== process.env.APP_TOKEN) {
+    if (!appToken || appToken !== process.env.APP_TOKEN) {
       logError("Unauthorized call: " + JSON.stringify(req.headers));
       return res.sendStatus(401);
     }
@@ -88,9 +88,9 @@ const startServer = async () => {
 
   app.get("/check/:to/:code", async (req, res) => {
     const { to, code } = req.params;
-    const appKey = req.headers["app-key"];
+    const appToken = req.headers["app-token"];
 
-    if (!appKey || appKey !== process.env.APP_TOKEN) {
+    if (!appToken || appToken !== process.env.APP_TOKEN) {
       logError("Unauthorized call: " + JSON.stringify(req.headers));
       return res.sendStatus(401);
     }
@@ -130,9 +130,9 @@ const startServer = async () => {
 
   app.get("/invite/:receivers/:tripId", async (req, res) => {
     const { receivers, tripId } = req.params;
-    const appKey = req.headers["app-key"];
+    const appToken = req.headers["app-token"];
 
-    if (!appKey || appKey !== process.env.APP_TOKEN) {
+    if (!appToken || appToken !== process.env.APP_TOKEN) {
       logError("Unauthorized call: " + JSON.stringify(req.headers));
       return res.sendStatus(401);
     }
