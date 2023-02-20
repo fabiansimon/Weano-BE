@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 import twilio from "twilio";
 import nodemailer from "nodemailer";
 import { sendPushNotifications } from "./src/utils/pushNotificationService.js";
-import { logInfo } from "./src/utils/logger.js";
+import { logError, logInfo } from "./src/utils/logger.js";
 dotenv.config();
 
 const startServer = async () => {
@@ -64,6 +64,7 @@ const startServer = async () => {
     const appKey = req.headers["app-key"];
 
     if (!appKey || appKey !== process.env.APP_TOKEN) {
+      logError("Unauthorized call: " + req);
       return res.sendStatus(401);
     }
 
@@ -73,10 +74,10 @@ const startServer = async () => {
         .verifications.create({ to, channel: "sms" })
         .then((verification) => {
           res.json(verification);
-          logInfo("Verification sent out to: " + to);
+          logError("Verification sent out to: " + to);
         })
         .catch((err) => {
-          logInfo("ERROR: " + err);
+          logError("ERROR: " + err);
           res.json(err);
         });
     } catch (error) {
@@ -90,6 +91,7 @@ const startServer = async () => {
     const appKey = req.headers["app-key"];
 
     if (!appKey || appKey !== process.env.APP_TOKEN) {
+      logError("Unauthorized call: " + req);
       return res.sendStatus(401);
     }
 
@@ -99,10 +101,10 @@ const startServer = async () => {
         .verificationChecks.create({ to, code })
         .then((verification) => {
           res.json(verification);
-          logInfo("Verification check sent by: " + to);
+          logError("Verification check sent by: " + to);
         })
         .catch((err) => {
-          logInfo("ERROR: " + err);
+          logError("ERROR: " + err);
           res.json(err);
         });
     } catch (error) {
@@ -131,6 +133,7 @@ const startServer = async () => {
     const appKey = req.headers["app-key"];
 
     if (!appKey || appKey !== process.env.APP_TOKEN) {
+      logError("Unauthorized call: " + req);
       return res.sendStatus(401);
     }
 
@@ -160,6 +163,7 @@ const startServer = async () => {
         return res.json("Email sent: " + info.response);
       });
     } catch (error) {
+      logError("ERROR: " + err);
       res.json(error);
     }
   });
