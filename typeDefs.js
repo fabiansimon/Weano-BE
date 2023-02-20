@@ -57,6 +57,7 @@ const typeDefs = gql`
 
   type Task {
     _id: String
+    createdAt: String
     assignee: String
     creatorId: String
     title: String
