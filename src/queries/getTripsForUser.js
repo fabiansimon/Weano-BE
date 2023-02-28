@@ -22,7 +22,7 @@ export const getTripsForUser = async (_, __, { userId }) => {
     recapTimestamp.setFullYear(recapTimestamp.getFullYear() - 1);
     recapTimestamp = Date.parse(recapTimestamp) / 1000;
 
-    const tripData = await Promise.all(
+    let tripData = await Promise.all(
       trips.map(async (trip) => {
         const { dateRange } = trip;
         let _images = await Image.find({
@@ -66,6 +66,13 @@ export const getTripsForUser = async (_, __, { userId }) => {
         return trip;
       })
     );
+
+    tripData.sort((a,b) => {
+      if (b?.dateRange?.startDate > a?.dateRange?.startDate) {
+        return -1;
+      }
+      return 0;
+    })
 
     return tripData;
   } catch (error) {
