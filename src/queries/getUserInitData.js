@@ -3,6 +3,7 @@ import Image from "../models/Image.model.js";
 import Task from "../models/Task.model.js";
 import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
+import Utils from "../utils/statusConverter.js";
 
 export const getUserInitData = async (_, __, { userId }) => {
   if (!userId) {
@@ -37,14 +38,9 @@ export const getUserInitData = async (_, __, { userId }) => {
           },
         });
 
-        // const isActive =
-        //   dateRange.startDate < now && dateRange.endDate > now;
-        // const isRewind =
-        //   dateRange.startDate < recapTimestamp && dateRange.endDate < now;
+        const type = Utils.getTripTypeFromDate(dateRange);
 
-        const isUpcoming = ((dateRange.startDate - now) / 86400).toFixed(0) < 7;
-
-        if (isUpcoming) {
+        if (type === "soon") {
           const mutualTasks = await Task.find({
             _id: {
               $in: trip.mutualTasks,
@@ -68,12 +64,12 @@ export const getUserInitData = async (_, __, { userId }) => {
       })
     );
 
-    tripData.sort((a,b) => {
+    tripData.sort((a, b) => {
       if (b?.dateRange?.startDate > a?.dateRange?.startDate) {
         return -1;
       }
       return 0;
-    })
+    });
 
     const images = await Image.find({
       _id: {
