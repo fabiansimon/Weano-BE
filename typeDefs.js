@@ -308,7 +308,7 @@ const typeDefs = gql`
     sendReminder(data: ReminderInput!): Boolean
 
     # Images
-    uploadTripImage(image: ImageInput!): Boolean
+    uploadTripImage(image: ImageInput!): TripImage
     deleteImage(data: DeleteInput!): Boolean
   }
 `;
