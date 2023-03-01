@@ -19,11 +19,6 @@ export const getUserInitData = async (_, __, { userId }) => {
       },
     });
 
-    const now = Date.now() / 1000;
-    let recapTimestamp = new Date();
-    recapTimestamp.setFullYear(recapTimestamp.getFullYear() - 1);
-    recapTimestamp = Date.parse(recapTimestamp) / 1000;
-
     let tripData = await Promise.all(
       trips.map(async (trip) => {
         const { dateRange } = trip;
@@ -60,6 +55,7 @@ export const getUserInitData = async (_, __, { userId }) => {
 
         trip.images = _images;
         trip.activeMembers = _activeMembers;
+        trip.type = type;
         return trip;
       })
     );
