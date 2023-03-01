@@ -129,11 +129,11 @@ const typeDefs = gql`
   }
 
   type TripImagesResponse {
-    images: [TripImages]
+    images: [TripImage]
     userFreeImages: Int
   }
 
-  type TripImages {
+  type TripImage {
     _id: String
     createdAt: String
     uri: String!
@@ -308,7 +308,7 @@ const typeDefs = gql`
     sendReminder(data: ReminderInput!): Boolean
 
     # Images
-    uploadTripImage(image: ImageInput!): Boolean
+    uploadTripImage(image: ImageInput!): TripImage
     deleteImage(data: DeleteInput!): Boolean
   }
 `;

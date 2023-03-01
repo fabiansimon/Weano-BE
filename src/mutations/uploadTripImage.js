@@ -22,7 +22,7 @@ export const uploadTripImage = async (_, { image }, { userId }) => {
     await Trip.findByIdAndUpdate(tripId, { $push: { images: _image.id } });
 
     await _image.save();
-    return true;
+    return _image;
   } catch (error) {
     throw new ApolloError(error);
   }
