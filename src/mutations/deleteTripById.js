@@ -14,22 +14,22 @@ export const deleteTripById = async (_, { tripId }, { userId }) => {
 
     const {
       _id,
-      mutualTasks,
-      privateTasks,
-      destinationPoll,
-      polls: otherPolls,
+      // mutualTasks,
+      // privateTasks,
+      // destinationPoll,
+      // polls: otherPolls,
       activeMembers,
     } = trip;
 
-    const tasks = mutualTasks.concat(privateTasks);
+    // const tasks = mutualTasks.concat(privateTasks);
 
-    let polls;
-    if (destinationPoll) {
-      polls = otherPolls.concat(destinationPoll);
-    }
+    // let polls;
+    // if (destinationPoll) {
+    //   polls = otherPolls.concat(destinationPoll);
+    // }
 
-    await Task.deleteMany({ _id: { $in: tasks } });
-    await Poll.deleteMany({ _id: { $in: polls } });
+    // await Task.deleteMany({ _id: { $in: tasks } });
+    // await Poll.deleteMany({ _id: { $in: polls } });
 
     await activeMembers.forEach(async (member) => {
       await User.findByIdAndUpdate(member, {
@@ -37,7 +37,7 @@ export const deleteTripById = async (_, { tripId }, { userId }) => {
       });
     });
 
-    await Trip.findByIdAndDelete(tripId);
+    // await Trip.findByIdAndDelete(tripId);
 
     return true;
   } catch (error) {
