@@ -39,6 +39,7 @@ const typeDefs = gql`
     images: [Image]
     openTasks: [Task]
     activeMembers: [User]
+    documents: [Document]
     type: String
   }
 
