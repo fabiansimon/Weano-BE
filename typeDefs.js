@@ -101,6 +101,7 @@ const typeDefs = gql`
 
   type Document {
     _id: String
+    title: String
     uri: String
     creatorId: String
     type: String
@@ -292,6 +293,7 @@ const typeDefs = gql`
     type: String!
     uri: String!
     tripId: String!
+    title: String!
   }
 
   type Mutation {

@@ -1,7 +1,5 @@
 import { ApolloError, AuthenticationError } from "apollo-server-express";
-import Image from "../models/Image.model.js";
 import Trip from "../models/Trip.model.js";
-import User from "../models/User.model.js";
 import Document from "../models/Document.model.js";
 
 export const uploadDocument = async (_, { document }, { userId }) => {
@@ -10,12 +8,13 @@ export const uploadDocument = async (_, { document }, { userId }) => {
   }
 
   try {
-    const { uri, type, tripId } = document;
+    const { uri, type, title, tripId } = document;
 
     const _document = new Document({
       uri,
       creatorId: userId,
       tripId,
+      title,
       type,
     });
 
