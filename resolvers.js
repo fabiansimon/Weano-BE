@@ -23,6 +23,8 @@ import { getUserInitData } from "./src/queries/getUserInitData.js";
 import { removeUserFromTrip } from "./src/mutations/removeUserFromTrip.js";
 import { sendReminder } from "./src/mutations/sendReminder.js";
 import { deleteImage } from "./src/mutations/deleteImage.js";
+import { uploadDocument } from "./src/mutations/uploadDocument.js";
+import { deleteDocument } from "./src/mutations/deleteDocument.js";
 
 const resolvers = {
   Query: {
@@ -54,6 +56,8 @@ const resolvers = {
     removeUserFromTrip,
     deleteImage,
     sendReminder,
+    uploadDocument,
+    deleteDocument,
   },
 };
 

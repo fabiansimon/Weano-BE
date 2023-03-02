@@ -57,6 +57,9 @@ const TripSchema = new mongoose.Schema(
     assignedImages: {
       type: Array,
     },
+    documents: {
+      type: Array,
+    },
   },
   {
     timestamps: true,
