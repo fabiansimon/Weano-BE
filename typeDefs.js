@@ -94,7 +94,16 @@ const typeDefs = gql`
     polls: [Poll]
     mutualTasks: [Task]
     privateTasks: [Task]
+    documents: [Document]
     type: String
+  }
+
+  type Document {
+    _id: String
+    uri: String
+    creatorId: String
+    type: String
+    createdAt: String
   }
 
   type Poll {
@@ -278,6 +287,12 @@ const typeDefs = gql`
     tripId: String!
   }
 
+  input DocumentInput {
+    type: String!
+    uri: String!
+    tripId: String!
+  }
+
   type Mutation {
     # User
     registerUser(user: RegisterUserInput!): String!
@@ -312,6 +327,10 @@ const typeDefs = gql`
     # Images
     uploadTripImage(image: ImageInput!): TripImage
     deleteImage(data: DeleteInput!): Boolean
+
+    # Documents
+    uploadDocument(document: DocumentInput!): Document
+    deleteDocument(data: DeleteInput!): Boolean
   }
 `;
 
