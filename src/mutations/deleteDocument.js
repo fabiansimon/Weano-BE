@@ -13,8 +13,6 @@ export const deleteDocument = async (_, args, { userId }) => {
     try {
       const document = await Document.findById(id);
       const { creatorId } = document;
-      console.log(creatorId);
-      console.log(userId);
 
       if (creatorId !== userId) {
         return;
