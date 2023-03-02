@@ -5,6 +5,7 @@ import Task from "../models/Task.model.js";
 import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
 import Image from "../models/Image.model.js";
+import Utils from "../utils/statusConverter.js";
 
 export const getTripById = async (_, { tripId }, { userId }) => {
   if (!userId) {
@@ -61,6 +62,8 @@ export const getTripById = async (_, { tripId }, { userId }) => {
       dateRange,
     } = trip;
 
+    const type = Utils.getTripTypeFromDate(dateRange);
+
     return {
       id,
       hostId,
@@ -75,6 +78,7 @@ export const getTripById = async (_, { tripId }, { userId }) => {
       polls,
       mutualTasks,
       privateTasks,
+      type,
     };
   } catch (error) {
     throw new ApolloError(error);
