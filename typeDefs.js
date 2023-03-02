@@ -94,6 +94,7 @@ const typeDefs = gql`
     polls: [Poll]
     mutualTasks: [Task]
     privateTasks: [Task]
+    type: String
   }
 
   type Poll {
