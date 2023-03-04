@@ -5,29 +5,25 @@ import { logError, logInfo } from "./logger.js";
 dotenv.config();
 
 export const daySegments = [
-  {
-    start: 8,
-    end: 11,
-  },
+  // {
+  //   start: 11,
+  //   end: 14,
+  // },
   {
     start: 11,
-    end: 14,
+    end: 15,
   },
   {
-    start: 14,
-    end: 17,
+    start: 15,
+    end: 19,
   },
   {
-    start: 17,
-    end: 20,
-  },
-  {
-    start: 20,
+    start: 19,
     end: 24,
   },
 ];
 
-export const DAILY_IMAGE_CAP = 10;
+export const DAILY_IMAGE_CAP = 6;
 export const IMAGES_PER_CHUNK = (DAILY_IMAGE_CAP / daySegments.length).toFixed(
   0
 );
