@@ -1,4 +1,5 @@
 import { ApolloError, AuthenticationError } from "apollo-server-express";
+import TripController from "../controllers/TripController.js";
 import Image from "../models/Image.model.js";
 import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
@@ -10,6 +11,15 @@ export const uploadTripImage = async (_, { image }, { userId }) => {
 
   try {
     const { title, description, uri, tripId } = image;
+
+    const userFreeImages = await TripController.getFreeImagesForUser(
+      tripId,
+      userId
+    );
+
+    if (userFreeImages <= 0) {
+      throw new ApolloError("No free images left righ now.");
+    }
 
     const _image = new Image({
       title,
