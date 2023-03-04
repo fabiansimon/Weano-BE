@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 
 const db = mongoose.connection;
-const Trip = db.model("trip");
-const Image = db.model("image");
 
 function getTripTypeFromDate(dateRange) {
   // let recapTimestamp = new Date();
@@ -29,6 +27,9 @@ function getTripTypeFromDate(dateRange) {
 }
 
 async function getFreeImagesForUser(tripId, userId) {
+  const Image = db.model("image");
+  const Trip = db.model("trip");
+
   const { images: tripImages, assignedImages } = await Trip.findById(tripId);
   let userFreeImages;
 
