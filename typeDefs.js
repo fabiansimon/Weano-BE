@@ -41,6 +41,7 @@ const typeDefs = gql`
     activeMembers: [User]
     documents: [Document]
     type: String
+    userFreeImages: Int
   }
 
   type Trip {
@@ -97,6 +98,7 @@ const typeDefs = gql`
     privateTasks: [Task]
     documents: [Document]
     type: String
+    userFreeImages: Int
   }
 
   type Document {

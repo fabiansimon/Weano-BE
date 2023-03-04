@@ -6,7 +6,7 @@ import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
 import Image from "../models/Image.model.js";
 import Document from "../models/Document.model.js";
-import Utils from "../utils/statusConverter.js";
+import TripController from "../controllers/TripController.js";
 
 export const getTripById = async (_, { tripId }, { userId }) => {
   if (!userId) {
@@ -69,7 +69,17 @@ export const getTripById = async (_, { tripId }, { userId }) => {
       dateRange,
     } = trip;
 
-    const type = Utils.getTripTypeFromDate(dateRange);
+    const type = TripController.getTripTypeFromDate(dateRange);
+
+    let userFreeImages;
+    if (type === "active") {
+      userFreeImages = await TripController.getFreeImagesForUser(
+        tripId,
+        userId
+      );
+    } else {
+      userFreeImages = 0;
+    }
 
     return {
       id,
@@ -87,6 +97,7 @@ export const getTripById = async (_, { tripId }, { userId }) => {
       privateTasks,
       documents,
       type,
+      userFreeImages,
     };
   } catch (error) {
     throw new ApolloError(error);
