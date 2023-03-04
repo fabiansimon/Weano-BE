@@ -18,7 +18,7 @@ export const uploadTripImage = async (_, { image }, { userId }) => {
     );
 
     if (userFreeImages <= 0) {
-      throw new ApolloError("No free images left righ now.");
+      throw new ApolloError("No free images left right now.");
     }
 
     const _image = new Image({
