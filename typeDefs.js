@@ -12,6 +12,8 @@ const typeDefs = gql`
     trips: [String]
     expenses: [UserExpense]
     pushToken: String
+    countriesVisited: Int
+    friendsAmount: Int
   }
 
   type UserExpense {
@@ -79,7 +81,6 @@ const typeDefs = gql`
   type InitDataResponse {
     userData: User
     trips: [SimplifiedTrip]
-    images: [Image]
   }
 
   type ConcatedTrip {

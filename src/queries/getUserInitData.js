@@ -19,9 +19,27 @@ export const getUserInitData = async (_, __, { userId }) => {
       },
     });
 
+    let countriesVisited = [];
+    let friends = [];
     let tripData = await Promise.all(
       trips.map(async (trip) => {
-        const { dateRange, _id } = trip;
+        const { dateRange, _id, location: { placeName }, activeMembers } = trip;
+        const placeNameArr = placeName.split(',');
+        const country = placeNameArr[placeNameArr.length-1].trim();
+
+        const cIndex = countriesVisited.findIndex((c) => c === country)
+
+        for (const member of activeMembers) {
+          const i = friends.findIndex((f) => f === member)
+          if (i < 0) {
+            friends.push(member);
+          }
+        }
+
+        if (cIndex < 0) {
+          countriesVisited.push(country);
+        }
+
         let _images = await Image.find({
           _id: {
             $in: trip.images,
@@ -78,16 +96,13 @@ export const getUserInitData = async (_, __, { userId }) => {
       return 0;
     });
 
-    const images = await Image.find({
-      _id: {
-        $in: userData.images,
-      },
-    });
-
     return {
-      userData,
+      userData: {
+        ...userData,
+        countriesVisited: countriesVisited.length,
+        friendsAmount: friends.length-1
+      },
       trips: tripData,
-      images,
     };
   } catch (error) {
     throw new ApolloError(error);
