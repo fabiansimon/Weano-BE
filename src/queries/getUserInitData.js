@@ -96,12 +96,11 @@ export const getUserInitData = async (_, __, { userId }) => {
       return 0;
     });
 
+    userData.countriesVisited = countriesVisited;
+    userData.friends = friends;
+
     return {
-      userData: {
-        ...userData,
-        countriesVisited: countriesVisited.length,
-        friendsAmount: friends.length-1
-      },
+      userData,
       trips: tripData,
     };
   } catch (error) {

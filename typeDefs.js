@@ -12,8 +12,8 @@ const typeDefs = gql`
     trips: [String]
     expenses: [UserExpense]
     pushToken: String
-    countriesVisited: Int
-    friendsAmount: Int
+    countriesVisited: [String]
+    friends: [String]
   }
 
   type UserExpense {
