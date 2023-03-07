@@ -28,11 +28,41 @@ export const uploadTripImage = async (_, { image }, { userId }) => {
       author: userId,
       tripId,
     });
-    await User.findByIdAndUpdate(userId, { $push: { images: _image.id } });
+
+    const {
+      _id: authorId,
+      firstName,
+      lastName,
+      avatarUri,
+    } = await User.findByIdAndUpdate(userId, {
+      $push: { images: _image.id },
+    });
     await Trip.findByIdAndUpdate(tripId, { $push: { images: _image.id } });
 
-    const imageData = await _image.save();
-    return imageData;
+    const {
+      _id,
+      createdAt: _createdAt,
+      uri: _uri,
+      title: _title,
+      description: _description,
+    } = await _image.save();
+
+    const tripImage = {
+      _id,
+      createdAt: _createdAt,
+      uri: _uri,
+      title: _title,
+      description: _description,
+      author: {
+        _id: authorId,
+        firstName,
+        lastName,
+        avatarUri,
+      },
+      userFreeImages,
+    };
+
+    return tripImage;
   } catch (error) {
     throw new ApolloError(error);
   }
