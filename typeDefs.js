@@ -156,6 +156,7 @@ const typeDefs = gql`
     title: String
     description: String
     author: Author
+    userFreeImages: Int
   }
   type Author {
     _id: String
