@@ -1,4 +1,8 @@
 import { ApolloError, AuthenticationError } from "apollo-server-express";
+import {
+  FREE_TIER_LIMITS,
+  PREMIUM_TIER_LIMITS,
+} from "../constants/usageLimits.js";
 import TripController from "../controllers/TripController.js";
 import Image from "../models/Image.model.js";
 import Task from "../models/Task.model.js";
@@ -23,14 +27,19 @@ export const getUserInitData = async (_, __, { userId }) => {
     let friends = [];
     let tripData = await Promise.all(
       trips.map(async (trip) => {
-        const { dateRange, _id, location: { placeName }, activeMembers } = trip;
-        const placeNameArr = placeName.split(',');
-        const country = placeNameArr[placeNameArr.length-1].trim();
+        const {
+          dateRange,
+          _id,
+          location: { placeName },
+          activeMembers,
+        } = trip;
+        const placeNameArr = placeName.split(",");
+        const country = placeNameArr[placeNameArr.length - 1].trim();
 
-        const cIndex = countriesVisited.findIndex((c) => c === country)
+        const cIndex = countriesVisited.findIndex((c) => c === country);
 
         for (const member of activeMembers) {
-          const i = friends.findIndex((f) => f === member)
+          const i = friends.findIndex((f) => f === member);
           if (i < 0) {
             friends.push(member);
           }
@@ -102,6 +111,8 @@ export const getUserInitData = async (_, __, { userId }) => {
     return {
       userData,
       trips: tripData,
+      freeTierLimits: JSON.stringify(FREE_TIER_LIMITS),
+      premiumTierLimits: JSON.stringify(PREMIUM_TIER_LIMITS),
     };
   } catch (error) {
     throw new ApolloError(error);
