@@ -81,6 +81,8 @@ const typeDefs = gql`
   type InitDataResponse {
     userData: User
     trips: [SimplifiedTrip]
+    freeTierLimits: String
+    premiumTierLimits: String
   }
 
   type ConcatedTrip {

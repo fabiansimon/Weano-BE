@@ -50,6 +50,11 @@ export async function sendPushNotifications() {
 
       const { token, firstName, id } = member;
       const { id: tripId } = trip;
+
+      if (!token) {
+        continue;
+      }
+
       if (!Expo.isExpoPushToken(token)) {
         logError(`Push token ${token} is not a valid Expo push token`);
         continue;
