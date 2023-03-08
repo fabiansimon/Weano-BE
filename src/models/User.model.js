@@ -36,6 +36,9 @@ const UserSchema = new mongoose.Schema(
     pushToken: {
       type: String,
     },
+    isProMember: {
+      type: Boolean
+    }
   },
   {
     timestamps: true,

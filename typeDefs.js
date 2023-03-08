@@ -14,6 +14,7 @@ const typeDefs = gql`
     pushToken: String
     countriesVisited: [String]
     friends: [String]
+    isProMember: Boolean
   }
 
   type UserExpense {
@@ -230,6 +231,7 @@ const typeDefs = gql`
     firstName: String
     lastName: String
     pushToken: String
+    isProMember: Boolean
   }
 
   input ExpenseInput {
