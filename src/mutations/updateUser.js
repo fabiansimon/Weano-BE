@@ -7,7 +7,7 @@ export const updateUser = async (_, { user }, { userId }) => {
   }
 
   try {
-    const { avatarUri, firstName, lastName, email, phoneNumber, pushToken } =
+    const { avatarUri, firstName, lastName, email, phoneNumber, pushToken, isProMember } =
       user;
 
     const updates = {};
@@ -29,6 +29,9 @@ export const updateUser = async (_, { user }, { userId }) => {
     }
     if (pushToken !== undefined) {
       updates.pushToken = pushToken;
+    }
+    if (isProMember !== undefined) {
+      updates.isProMember = isProMember;
     }
 
     await User.findByIdAndUpdate(userId, updates, { new: true });
