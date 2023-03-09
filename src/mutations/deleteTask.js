@@ -10,23 +10,19 @@ export const deleteTask = async (_, args, { userId }) => {
   try {
     const { id, tripId, isPrivate = false } = args.data;
 
-    try {
-      await Task.findByIdAndDelete(id);
+    await Task.findByIdAndDelete(id);
 
-      if (isPrivate) {
-        await Trip.findByIdAndUpdate(tripId, {
-          $pull: { privateTasks: id },
-        });
-      } else {
-        await Trip.findByIdAndUpdate(tripId, {
-          $pull: { mutualTasks: id },
-        });
-      }
-
-      return true;
-    } catch (error) {
-      throw new ApolloError(error);
+    if (isPrivate) {
+      await Trip.findByIdAndUpdate(tripId, {
+        $pull: { privateTasks: id },
+      });
+    } else {
+      await Trip.findByIdAndUpdate(tripId, {
+        $pull: { mutualTasks: id },
+      });
     }
+
+    return true;
   } catch (error) {
     throw new ApolloError(error);
   }
