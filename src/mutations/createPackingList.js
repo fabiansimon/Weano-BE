@@ -14,7 +14,6 @@ export const createPackingList = async (_, args, { userId }) => {
 
     let newItems = [];
     for (const item of items) {
-      console.log(item);
       const { title } = item;
       const packingItem = await new PackingItem({
         creatorId: userId,
