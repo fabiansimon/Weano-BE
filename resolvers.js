@@ -25,6 +25,9 @@ import { sendReminder } from "./src/mutations/sendReminder.js";
 import { deleteImage } from "./src/mutations/deleteImage.js";
 import { uploadDocument } from "./src/mutations/uploadDocument.js";
 import { deleteDocument } from "./src/mutations/deleteDocument.js";
+import { createPackingList } from "./src/mutations/createPackingList.js";
+import { deletePackingItem } from "./src/mutations/deletePackingItem.js";
+import { updatePackingItem } from "./src/mutations/UpdatePackingItem.js";
 
 const resolvers = {
   Query: {
@@ -58,6 +61,9 @@ const resolvers = {
     sendReminder,
     uploadDocument,
     deleteDocument,
+    createPackingList,
+    deletePackingItem,
+    updatePackingItem,
   },
 };
 

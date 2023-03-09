@@ -7,6 +7,7 @@ import User from "../models/User.model.js";
 import Image from "../models/Image.model.js";
 import Document from "../models/Document.model.js";
 import TripController from "../controllers/TripController.js";
+import PackingItem from "../models/PackingItem.model.js";
 
 export const getTripById = async (_, { tripId }, { userId }) => {
   if (!userId) {
@@ -18,6 +19,12 @@ export const getTripById = async (_, { tripId }, { userId }) => {
     const images = await Image.find({
       _id: {
         $in: trip.images,
+      },
+    });
+
+    const packingItems = await PackingItem.find({
+      _id: {
+        $in: trip.packingItems,
       },
     });
 
@@ -96,6 +103,7 @@ export const getTripById = async (_, { tripId }, { userId }) => {
       mutualTasks,
       privateTasks,
       documents,
+      packingItems,
       type,
       userFreeImages,
     };

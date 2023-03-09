@@ -60,6 +60,9 @@ const TripSchema = new mongoose.Schema(
     documents: {
       type: Array,
     },
+    packingItems: {
+      type: Array,
+    },
   },
   {
     timestamps: true,

@@ -101,6 +101,7 @@ const typeDefs = gql`
     mutualTasks: [Task]
     privateTasks: [Task]
     documents: [Document]
+    packingItems: [PackingItem]
     type: String
     userFreeImages: Int
   }
@@ -171,6 +172,13 @@ const typeDefs = gql`
   type PollResponse {
     id: String
     options: [PollOption]
+  }
+
+  type PackingItem {
+    _id: String
+    title: String!
+    amount: Int!
+    isPacked: Boolean
   }
 
   type Query {
@@ -284,6 +292,12 @@ const typeDefs = gql`
     isDone: Boolean!
   }
 
+  input UpdatePackingItemInput {
+    id: String!
+    isPacked: Boolean!
+    amount: Int
+  }
+
   input VoteInput {
     pollId: String!
     optionId: String!
@@ -302,6 +316,16 @@ const typeDefs = gql`
     uri: String!
     tripId: String!
     title: String!
+  }
+
+  input PackingItemInput {
+    title: String!
+    amount: Int
+  }
+
+  input PackingListInput {
+    tripId: String!
+    items: [PackingItemInput]
   }
 
   type Mutation {
@@ -342,6 +366,11 @@ const typeDefs = gql`
     # Documents
     uploadDocument(document: DocumentInput!): Document
     deleteDocument(data: DeleteInput!): Boolean
+
+    # Packing Items
+    createPackingList(packingData: PackingListInput!): [PackingItem]
+    deletePackingItem(data: DeleteInput!): Boolean
+    updatePackingItem(data: UpdatePackingItemInput!): Boolean
   }
 `;
 
