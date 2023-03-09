@@ -29,7 +29,6 @@ export const sendReminder = async (_, args, { userId }) => {
     let messages = [];
     for (var i = 0; i < data.length; i++) {
       const { token } = data[i];
-      console.log(token);
       if (!Expo.isExpoPushToken(token)) {
         logError(`Push token ${token} is not a valid Expo push token`);
         continue;
