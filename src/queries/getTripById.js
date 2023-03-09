@@ -26,7 +26,9 @@ export const getTripById = async (_, { tripId }, { userId }) => {
       _id: {
         $in: trip.packingItems,
       },
-    });
+    })
+      .where("creatorId")
+      .equals(userId);
 
     const documents = await Document.find({
       _id: {
