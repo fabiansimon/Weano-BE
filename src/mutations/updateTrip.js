@@ -17,6 +17,7 @@ export const updateTrip = async (_, { trip }, { userId }) => {
       dateRange,
       images,
       expenses,
+      currency,
     } = trip;
 
     const updates = {};
@@ -35,6 +36,10 @@ export const updateTrip = async (_, { trip }, { userId }) => {
         ...location,
         votedBy: [],
       };
+    }
+
+    if (currency !== undefined) {
+      updates.currency = currency;
     }
 
     if (activeMembers !== undefined) {
