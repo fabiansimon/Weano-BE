@@ -76,6 +76,7 @@ export const getTripById = async (_, { tripId }, { userId }) => {
       description,
       location,
       dateRange,
+      currency
     } = trip;
 
     const type = TripController.getTripTypeFromDate(dateRange);
@@ -108,6 +109,7 @@ export const getTripById = async (_, { tripId }, { userId }) => {
       packingItems,
       type,
       userFreeImages,
+      currency
     };
   } catch (error) {
     throw new ApolloError(error);

@@ -45,6 +45,14 @@ const TripSchema = new mongoose.Schema(
         type: Number,
       },
     },
+    currency: {
+      symbol: {
+        type: String,
+      },
+      string: {
+        type: String,
+      },
+    },
     images: {
       type: Array,
     },
