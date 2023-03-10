@@ -33,6 +33,10 @@ export const createTrip = async (_, args, { userId }) => {
       activeMembers: [userId],
       destinationPoll: pollId.toString(),
       assignedImages: [],
+      currency: {
+        symbol: '$',
+        string: 'USD',
+      }
     });
 
     const { _id } = await trip.save();

@@ -18,6 +18,9 @@ const ExpenseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    paidBy: {
+      type: String,
+    },
   },
   {
     timestamps: true,

@@ -9,12 +9,13 @@ export const createExpense = async (_, args, { userId }) => {
   }
 
   try {
-    const { title, amount, currency, tripId } = args.expense;
+    const { title, amount, currency, tripId, paidBy  } = args.expense;
     const expense = new Expense({
       creatorId: userId,
       title,
       amount,
       currency: currency || "$",
+      paidBy: paidBy || userId
     });
 
     const { _id } = await expense.save();
