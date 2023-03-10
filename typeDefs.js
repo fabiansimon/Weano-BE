@@ -104,6 +104,12 @@ const typeDefs = gql`
     packingItems: [PackingItem]
     type: String
     userFreeImages: Int
+    currency: Currency
+  }
+
+  type Currency {
+    symbol: String
+    string: String
   }
 
   type Document {
@@ -138,6 +144,7 @@ const typeDefs = gql`
     amount: Float
     currency: String
     createdAt: String
+    paidBy: String
   }
 
   type InvitationResponse {
@@ -247,6 +254,7 @@ const typeDefs = gql`
     amount: Float!
     tripId: String!
     currency: String
+    paidBy: String
   }
 
   input PollInput {
@@ -282,9 +290,15 @@ const typeDefs = gql`
     description: String
     location: LocationInput
     dateRange: DateRangeInput
+    currency: CurrencyInput
     # activeMembers
     # images
     # expenses
+  }
+
+  input CurrencyInput {
+    symbol: String!
+    string: String!
   }
 
   input UpdateTaskInput {
