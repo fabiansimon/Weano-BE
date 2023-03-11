@@ -176,6 +176,7 @@ const startServer = async () => {
     )
   );
 };
+console.log("eh");
 
 const planPushNotificationServer = () => {
   sendPushNotifications();
