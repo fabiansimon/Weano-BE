@@ -1,5 +1,4 @@
 import { ApolloError, AuthenticationError } from "apollo-server-express";
-import Poll from "../models/Poll.model.js";
 import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
 
@@ -9,34 +8,20 @@ export const createTrip = async (_, args, { userId }) => {
   }
 
   try {
-    const { title, location, dateRange } = args.trip;
-
-    const poll = new Poll({
-      creatorId: userId,
-      title: "Destination options",
-      description: "",
-    });
-
-    const { _id: pollId } = await poll.save();
-
-    const totalLocation = {
-      ...location,
-      votedBy: [],
-    };
+    const { title, destination, dateRange } = args.trip;
 
     const trip = new Trip({
       hostId: userId,
       title,
       description: "",
-      location: totalLocation,
+      destinations: [destination],
       dateRange,
       activeMembers: [userId],
-      destinationPoll: pollId.toString(),
       assignedImages: [],
       currency: {
-        symbol: '$',
-        string: 'USD',
-      }
+        symbol: "$",
+        string: "USD",
+      },
     });
 
     const { _id } = await trip.save();
