@@ -27,13 +27,8 @@ export const getUserInitData = async (_, __, { userId }) => {
     let friends = [];
     let tripData = await Promise.all(
       trips.map(async (trip) => {
-        const {
-          dateRange,
-          _id,
-          location: { placeName },
-          activeMembers,
-        } = trip;
-        const placeNameArr = placeName.split(",");
+        const { dateRange, _id, destinations, activeMembers } = trip;
+        const placeNameArr = destinations[0].placeName.split(",");
         const country = placeNameArr[placeNameArr.length - 1].trim();
 
         const cIndex = countriesVisited.findIndex((c) => c === country);
