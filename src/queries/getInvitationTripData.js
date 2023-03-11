@@ -4,7 +4,7 @@ import User from "../models/User.model.js";
 
 export const getInvitationTripData = async (_, { tripId }) => {
   try {
-    const { title, description, dateRange, location, hostId } =
+    const { title, description, dateRange, destinations, hostId } =
       await Trip.findById(tripId);
     const { firstName } = await User.findById(hostId);
 
@@ -12,7 +12,7 @@ export const getInvitationTripData = async (_, { tripId }) => {
       title,
       description,
       dateRange,
-      location,
+      location: destinations[0],
       hostName: firstName,
     };
   } catch (error) {

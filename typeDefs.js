@@ -36,7 +36,7 @@ const typeDefs = gql`
     id: ID
     thumbnailUri: String
     title: String
-    location: Location
+    destinations: [Location]
     description: String
     dateRange: DateRange
     images: [Image]
@@ -45,20 +45,6 @@ const typeDefs = gql`
     documents: [Document]
     type: String
     userFreeImages: Int
-  }
-
-  type Trip {
-    id: ID
-    thumbnailUri: String
-    title: String
-    description: String
-    location: Location
-    activeMembers: [User]
-    dateRange: DateRange
-    expenses: [Expense]
-    images: [String]
-    mutualTasks: [Task]
-    privateTasks: [Task]
   }
 
   type Task {
@@ -92,7 +78,7 @@ const typeDefs = gql`
     thumbnailUri: String
     title: String
     description: String
-    location: Location
+    destinations: [Location]
     activeMembers: [User]
     dateRange: DateRange
     expenses: [Expense]
@@ -196,7 +182,6 @@ const typeDefs = gql`
     getUserInitData: InitDataResponse
 
     # trip queries
-    getAllTrips: [Trip]
     getTripById(tripId: String): ConcatedTrip
     getTripsForUser: [SimplifiedTrip]
     getInvitationTripData(tripId: String): InvitationResponse
@@ -211,7 +196,7 @@ const typeDefs = gql`
   input TripInput {
     title: String
     description: String
-    location: LocationInput
+    destination: LocationInput
     dateRange: DateRangeInput
   }
 
@@ -288,7 +273,7 @@ const typeDefs = gql`
     thumbnailUri: String
     title: String
     description: String
-    location: LocationInput
+    destinations: [LocationInput]
     dateRange: DateRangeInput
     currency: CurrencyInput
     # activeMembers

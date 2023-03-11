@@ -12,7 +12,7 @@ export const updateTrip = async (_, { trip }, { userId }) => {
       thumbnailUri,
       title,
       description,
-      location,
+      destinations,
       activeMembers,
       dateRange,
       images,
@@ -31,11 +31,8 @@ export const updateTrip = async (_, { trip }, { userId }) => {
     if (description !== undefined) {
       updates.description = description;
     }
-    if (location !== undefined) {
-      updates.location = {
-        ...location,
-        votedBy: [],
-      };
+    if (destinations !== undefined) {
+      updates.destinations = destinations;
     }
 
     if (currency !== undefined) {
