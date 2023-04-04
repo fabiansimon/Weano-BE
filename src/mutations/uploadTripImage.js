@@ -12,6 +12,12 @@ export const uploadTripImage = async (_, { image }, { userId }) => {
   try {
     const { title, description, uri, tripId } = image;
 
+    const type = TripController.getTripTypeFromDate(dateRange);
+
+    if (type !== "active") {
+      throw new ApolloError("Trip is not active at the moment");
+    }
+
     const userFreeImages = await TripController.getFreeImagesForUser(
       tripId,
       userId

@@ -10,7 +10,7 @@ export const getImagesFromTrip = async (_, { tripId }, { userId }) => {
   }
 
   try {
-    const { images: tripImages } = await Trip.findById(tripId);
+    const { images: tripImages, dateRange } = await Trip.findById(tripId);
 
     let images = await Image.find({
       _id: {
@@ -26,10 +26,15 @@ export const getImagesFromTrip = async (_, { tripId }, { userId }) => {
       },
     });
 
-    const userFreeImages = await TripController.getFreeImagesForUser(
-      tripId,
-      userId
-    );
+    const type = TripController.getTripTypeFromDate(dateRange);
+
+    let userFreeImages = 0;
+    if (type === "active") {
+      userFreeImages = await TripController.getFreeImagesForUser(
+        tripId,
+        userId
+      );
+    }
 
     images = images.map((image) => {
       return {

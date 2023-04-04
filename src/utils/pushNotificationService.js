@@ -5,10 +5,6 @@ import { logError, logInfo } from "./logger.js";
 dotenv.config();
 
 export const daySegments = [
-  // {
-  //   start: 11,
-  //   end: 14,
-  // },
   {
     start: 11,
     end: 15,
@@ -19,14 +15,17 @@ export const daySegments = [
   },
   {
     start: 19,
-    end: 24,
+    end: 23,
   },
 ];
 
-export const DAILY_IMAGE_CAP = 6;
-export const IMAGES_PER_CHUNK = (DAILY_IMAGE_CAP / daySegments.length).toFixed(
-  0
-);
+const GOAL_IMAGES_TOTAL = 30;
+const debugDate = new Date();
+debugDate.setSeconds(debugDate.getSeconds() + 1);
+debugDate.setHours(debugDate.getHours() + 1);
+
+const DEBUG_ON = false;
+
 const db = mongoose.connection;
 
 export async function sendPushNotifications() {
@@ -37,6 +36,7 @@ export async function sendPushNotifications() {
     logInfo("No Active trips");
     return;
   }
+
   const timeChunks = getTimeChunks();
 
   let messages = [];
@@ -45,7 +45,9 @@ export async function sendPushNotifications() {
     let members = await getPushTokens(activeMembers);
     members = shuffleMembers(members);
 
-    for (var i = 0; i < timeChunks.length; i++) {
+    const tripTimeChunks = filterTimeChunks(trip, timeChunks);
+
+    for (var i = 0; i < tripTimeChunks.length; i++) {
       const member = members[i % members.length];
 
       const { token, firstName, id } = member;
@@ -69,7 +71,7 @@ export async function sendPushNotifications() {
           type: "upload_reminder",
           tripId: tripId,
         },
-        pushTime: timeChunks[i],
+        pushTime: tripTimeChunks[i],
         userId: id,
       });
     }
@@ -79,6 +81,10 @@ export async function sendPushNotifications() {
     const messagesChunk = messages.filter(
       (message) => message.pushTime === timeChunks[i]
     );
+
+    if (messagesChunk.length <= 0) {
+      continue;
+    }
 
     let chunks = expo.chunkPushNotifications(messagesChunk);
 
@@ -97,16 +103,6 @@ export async function sendPushNotifications() {
   }
 }
 
-function shuffleMembers(members) {
-  for (let i = members.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const temp = members[i];
-    members[i] = members[j];
-    members[j] = temp;
-  }
-  return members;
-}
-
 function scheduleNotification(chunk, time, expo) {
   const now = new Date();
   const delay = Math.abs(time - now);
@@ -118,6 +114,16 @@ function scheduleNotification(chunk, time, expo) {
     expo.sendPushNotificationsAsync(chunk);
     logInfo("Current chunk sent out: " + time);
   }, delay);
+}
+
+function shuffleMembers(members) {
+  for (let i = members.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = members[i];
+    members[i] = members[j];
+    members[j] = temp;
+  }
+  return members;
 }
 
 async function updateAssignedImages(chunk) {
@@ -141,7 +147,9 @@ async function getActiveTrips() {
   const activeTrips = await Trips.find({
     "dateRange.startDate": { $lt: now },
     "dateRange.endDate": { $gt: now },
+    activeMembers: { $exists: true, $not: { $size: 0 } },
   });
+
   return activeTrips;
 }
 
@@ -166,19 +174,51 @@ async function getPushTokens(users) {
 
 function getTimeChunks() {
   const chunks = [];
+  const perChunks = GOAL_IMAGES_TOTAL / daySegments.length;
 
   for (const segment of daySegments) {
-    for (var i = 0; i < IMAGES_PER_CHUNK; i++) {
+    for (var i = 0; i < perChunks; i++) {
       const { start, end } = segment;
-      const hour = Math.floor(Math.random() * (end - start) + start);
-      const minute = Math.floor(Math.random() * 60);
+      const hour = Math.round(Math.random() * (end - start) + start);
+      const minute = Math.round(Math.random() * 60);
       const date = new Date();
       date.setHours(hour, minute);
       chunks.push(date);
     }
   }
-  // const debugDate = new Date();
-  // debugDate.setSeconds(debugDate.getSeconds() + 2);
-  // chunks[0] = debugDate;
+
+  if (DEBUG_ON) {
+    chunks[0] = debugDate;
+  }
+
   return chunks;
+}
+
+function filterTimeChunks(trip, timeChunks) {
+  let filteredChunks = [];
+  const {
+    dateRange: { startDate, endDate },
+    activeMembers,
+  } = trip;
+
+  const diff = (Math.abs(endDate - startDate) / 60 / 60 / 24).toFixed(0);
+  let dailyImages = GOAL_IMAGES_TOTAL / diff;
+  let imagesPerUser = Math.round(dailyImages / activeMembers.length);
+
+  if (dailyImages < 1) dailyImages = 1;
+  if (dailyImages > 10) dailyImages = 10;
+  if (imagesPerUser > 3) dailyImages = activeMembers.length * 3;
+
+  while (filteredChunks.length < dailyImages) {
+    const chunk = timeChunks[Math.floor(Math.random() * timeChunks.length)];
+    if (filteredChunks.findIndex((c) => chunk === c) === -1) {
+      filteredChunks.push(chunk);
+    }
+  }
+
+  if (DEBUG_ON) {
+    filteredChunks[0] = debugDate;
+  }
+
+  return filteredChunks;
 }
