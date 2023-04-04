@@ -33,7 +33,7 @@ export const deleteTripById = async (_, { tripId }, { userId }) => {
       await User.findByIdAndUpdate(member, {
         $pull: { trips: _id.toString() },
       });
-      await Trip.findByIdAndUpdate(member, {
+      await Trip.findByIdAndUpdate(_id, {
         $pull: { activeMembers: member },
       });
     });
