@@ -1,6 +1,4 @@
 import { ApolloError, AuthenticationError } from "apollo-server-express";
-import Poll from "../models/Poll.model.js";
-import Task from "../models/Task.model.js";
 import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
 
@@ -34,6 +32,9 @@ export const deleteTripById = async (_, { tripId }, { userId }) => {
     await activeMembers.forEach(async (member) => {
       await User.findByIdAndUpdate(member, {
         $pull: { trips: _id.toString() },
+      });
+      await Trip.findByIdAndUpdate(member, {
+        $pull: { activeMembers: member },
       });
     });
 
