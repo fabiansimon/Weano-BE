@@ -20,9 +20,11 @@ export const daySegments = [
 ];
 
 const GOAL_IMAGES_TOTAL = 30;
-const debugDate = new Date();
-debugDate.setSeconds(debugDate.getSeconds() + 1);
-debugDate.setHours(debugDate.getHours() + 1);
+const DEBUG_DATE = new Date();
+DEBUG_DATE.setSeconds(DEBUG_DATE.getSeconds() + 15);
+DEBUG_DATE.setHours(DEBUG_DATE.getHours() + 1);
+
+const DEBUG_HOST_ID = "64036361669968d42b8e3840";
 
 const DEBUG_ON = false;
 
@@ -87,7 +89,6 @@ export async function sendPushNotifications() {
     }
 
     let chunks = expo.chunkPushNotifications(messagesChunk);
-
     for (let chunk of chunks) {
       const chunkTime = new Date(chunk[0].pushTime);
       const now = new Date();
@@ -103,17 +104,52 @@ export async function sendPushNotifications() {
   }
 }
 
-function scheduleNotification(chunk, time, expo) {
-  const now = new Date();
+async function scheduleNotification(chunk, time, expo) {
+  let now = new Date();
+  now.setHours(now.getHours() + 1);
+  let filteredChunk;
   const delay = Math.abs(time - now);
 
   logInfo("Push notifications will be send out: " + time);
 
-  setTimeout(() => {
-    updateAssignedImages(chunk);
-    expo.sendPushNotificationsAsync(chunk);
-    logInfo("Current chunk sent out: " + time);
+  setTimeout(async () => {
+    filteredChunk = await getActiveChunkItems(chunk);
+
+    if (filteredChunk.length <= 0) {
+      return;
+    }
+
+    updateAssignedImages(filteredChunk);
+    expo.sendPushNotificationsAsync(filteredChunk);
+    logInfo(
+      "Current chunk sent out to " + filteredChunk.length + "users --" + time
+    );
   }, delay);
+}
+
+async function getActiveChunkItems(chunk) {
+  const Trips = db.model("trip");
+  const arr = [];
+  const now = (Date.now() / 1000).toFixed(0);
+  for (const item of chunk) {
+    const {
+      hostId,
+      dateRange: { startDate, endDate },
+      activeMembers,
+    } = await Trips.findById(item.data.tripId);
+
+    if (startDate < now && endDate > now && activeMembers.length > 0) {
+      if (!DEBUG_ON) {
+        arr.push(item);
+      }
+
+      if (DEBUG_ON && hostId === DEBUG_HOST_ID) {
+        arr.push(item);
+      }
+    }
+  }
+
+  return arr;
 }
 
 function shuffleMembers(members) {
@@ -188,7 +224,7 @@ function getTimeChunks() {
   }
 
   if (DEBUG_ON) {
-    chunks[0] = debugDate;
+    chunks[0] = DEBUG_DATE;
   }
 
   return chunks;
@@ -217,7 +253,7 @@ function filterTimeChunks(trip, timeChunks) {
   }
 
   if (DEBUG_ON) {
-    filteredChunks[0] = debugDate;
+    filteredChunks[0] = DEBUG_DATE;
   }
 
   return filteredChunks;
