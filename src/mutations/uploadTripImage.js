@@ -10,7 +10,9 @@ export const uploadTripImage = async (_, { image }, { userId }) => {
   }
 
   try {
-    const { title, description, uri, tripId, dateRange } = image;
+    const { title, description, uri, tripId } = image;
+
+    const { dateRange } = await Trip.findById(tripId);
 
     const type = TripController.getTripTypeFromDate(dateRange);
 
