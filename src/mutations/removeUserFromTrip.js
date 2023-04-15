@@ -13,7 +13,7 @@ export const removeUserFromTrip = async (_, args, { userId }) => {
     try {
       const { hostId } = await Trip.findById(tripId);
 
-      if (hostId !== userId) {
+      if (hostId !== userId && removeUserId !== userId) {
         throw new ApolloError("Must be host to proceed");
       }
 
