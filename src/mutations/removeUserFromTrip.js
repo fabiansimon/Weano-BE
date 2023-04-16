@@ -17,10 +17,17 @@ export const removeUserFromTrip = async (_, args, { userId }) => {
         throw new ApolloError("Must be host to proceed");
       }
 
-      await Trip.findByIdAndUpdate(tripId, {
+      const { activeMembers } = await Trip.findByIdAndUpdate(tripId, {
         $pull: { activeMembers: removeUserId },
       });
 
+      if (removeUserId === hostId) {
+        const newHost = activeMembers.find((member) => member.id !== removeUserId) || '';
+        await Trip.findByIdAndUpdate(tripId, { 
+          hostId: newHost
+        });
+      }
+      
       await User.findByIdAndUpdate(removeUserId, {
         $pull: { trips: tripId },
       });
