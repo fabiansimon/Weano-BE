@@ -1,6 +1,7 @@
 import { ApolloError, AuthenticationError } from "apollo-server-express";
 import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
+import TripController from "../controllers/TripController.js";
 
 export const joinTrip = async (_, { tripId }, { userId }) => {
   if (!userId) {
