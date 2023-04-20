@@ -206,7 +206,7 @@ const typeDefs = gql`
   }
 
   input RegisterUserInput {
-    phoneNumber: String!
+    phoneNumber: String
     avatarUri: String
     email: String!
     firstName: String!
@@ -214,7 +214,8 @@ const typeDefs = gql`
   }
 
   input LoginUserInput {
-    phoneNumber: String!
+    phoneNumber: String
+    email: String
   }
 
   input ImageInput {
