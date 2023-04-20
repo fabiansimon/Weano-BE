@@ -3,9 +3,6 @@ import mongoose from "mongoose";
 const db = mongoose.connection;
 
 function getTripTypeFromDate(dateRange) {
-  // let recapTimestamp = new Date();
-  // recapTimestamp.setFullYear(recapTimestamp.getFullYear() - 1);
-  // recapTimestamp = Date.parse(recapTimestamp) / 1000;
   const { startDate, endDate } = dateRange;
   let now = new Date();
   now.setHours(23, 59, 59, 59);

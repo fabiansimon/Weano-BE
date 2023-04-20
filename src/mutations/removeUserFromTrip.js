@@ -22,7 +22,7 @@ export const removeUserFromTrip = async (_, args, { userId }) => {
       });
 
       if (removeUserId === hostId) {
-        const newHost = activeMembers.find((member) => member.id !== removeUserId) || '';
+        const newHost = activeMembers.find((member) => member !== removeUserId) || '';
         await Trip.findByIdAndUpdate(tripId, { 
           hostId: newHost
         });

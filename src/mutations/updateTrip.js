@@ -1,5 +1,6 @@
 import { ApolloError, AuthenticationError } from "apollo-server-express";
 import Trip from "../models/Trip.model.js";
+import TripController from "../controllers/TripController.js";
 
 export const updateTrip = async (_, { trip }, { userId }) => {
   if (!userId) {
@@ -20,6 +21,14 @@ export const updateTrip = async (_, { trip }, { userId }) => {
       currency,
     } = trip;
 
+    const {dateRange: currentRange} = await Trip.findById(tripId)
+
+    const type = TripController.getTripTypeFromDate(currentRange);
+
+    if (type === "recent") {
+      throw new ApolloError("Can't update the trip after the it's done");
+    }
+
     const updates = {};
 
     if (thumbnailUri !== undefined) {
@@ -34,11 +43,9 @@ export const updateTrip = async (_, { trip }, { userId }) => {
     if (destinations !== undefined) {
       updates.destinations = destinations;
     }
-
     if (currency !== undefined) {
       updates.currency = currency;
     }
-
     if (activeMembers !== undefined) {
       updates.activeMembers = activeMembers;
     }
