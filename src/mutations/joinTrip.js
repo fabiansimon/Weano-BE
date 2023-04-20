@@ -12,6 +12,12 @@ export const joinTrip = async (_, { tripId }, { userId }) => {
 
     const trip = await Trip.findById(tripId);
 
+    const type = TripController.getTripTypeFromDate(trip.dateRange);
+
+    if (type === "recent") {
+      throw new ApolloError("Can't join a trip after the trip is done");
+    }
+
     if (!trip) {
       throw new ApolloError("Trip ID not valid");
     }
