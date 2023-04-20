@@ -9,10 +9,16 @@ export const registerUser = async (_, { user }) => {
     const res = await User.find({ $or: [{ phoneNumber }, { email }] });
 
     if (res.length) {
-      throw new ValidationError("Already a user");
+      throw new ApolloError("Already a user");
     }
 
-    const _user = new User({ phoneNumber, email, firstName, lastName });
+    let _user;
+
+    if (phoneNumber) {
+      _user = new User({ phoneNumber, email, firstName, lastName });
+    } else {
+      _user = new User({ email, firstName, lastName });
+    }
 
     await _user.save();
 
