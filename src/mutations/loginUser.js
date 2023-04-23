@@ -4,14 +4,30 @@ import User from "../models/User.model.js";
 
 export const loginUser = async (_, { user }, { res }) => {
   try {
-    const { phoneNumber, email } = user;
+    const { phoneNumber, googleIdToken } = user;
 
-    let _user;
-    if (phoneNumber) {
-      _user = await User.findOne({ phoneNumber });
-    } else {
-      _user = await User.findOne({ email });
+    if (googleIdToken) {
+      const res = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${googleIdToken}`);
+
+      if (res.status !== 200) {
+        throw new ApolloError("Something went wrong");
+      }
+
+      const { sub: googleId } = await res.json();
+
+      const _user = await User.findOne({ googleId });
+      if (!_user) {
+        throw new ApolloError("No user found");
+      }
+
+      const accessToken = jwt.sign({ userId: _user.id }, process.env.JWT_SECRET, {
+        expiresIn: "7d",
+      });
+
+      return accessToken;
     }
+
+    const _user = await User.findOne({ phoneNumber });
 
     if (!_user) {
       throw new ApolloError("No user found");

@@ -207,15 +207,17 @@ const typeDefs = gql`
 
   input RegisterUserInput {
     phoneNumber: String
+    googleIdToken: String
     avatarUri: String
-    email: String!
-    firstName: String!
-    lastName: String!
+    email: String
+    firstName: String
+    lastName: String
   }
 
   input LoginUserInput {
     phoneNumber: String
     email: String
+    googleIdToken: String
   }
 
   input ImageInput {
