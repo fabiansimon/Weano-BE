@@ -73,6 +73,7 @@ export async function sendPushNotifications() {
           type: "upload_reminder",
           tripId: tripId,
         },
+        'content-available': 1,
         pushTime: tripTimeChunks[i],
         userId: id,
       });
