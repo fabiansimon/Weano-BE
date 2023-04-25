@@ -74,7 +74,7 @@ const typeDefs = gql`
 
   type ConcatedTrip {
     id: ID
-    hostId: String
+    hostIds: [String]
     thumbnailUri: String
     title: String
     description: String
@@ -133,14 +133,6 @@ const typeDefs = gql`
     paidBy: String
   }
 
-  type InvitationResponse {
-    title: String
-    description: String
-    dateRange: DateRange
-    location: Location
-    hostName: String
-  }
-
   type TripImagesResponse {
     images: [TripImage]
     userFreeImages: Int
@@ -184,7 +176,6 @@ const typeDefs = gql`
     # trip queries
     getTripById(tripId: String): ConcatedTrip
     getTripsForUser: [SimplifiedTrip]
-    getInvitationTripData(tripId: String): InvitationResponse
     getImagesFromTrip(tripId: String): TripImagesResponse
   }
 
@@ -279,6 +270,7 @@ const typeDefs = gql`
     destinations: [LocationInput]
     dateRange: DateRangeInput
     currency: CurrencyInput
+    newHost: String
     # activeMembers
     # images
     # expenses

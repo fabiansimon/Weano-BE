@@ -11,7 +11,7 @@ export const createTrip = async (_, args, { userId }) => {
     const { title, destination, dateRange } = args.trip;
 
     const trip = new Trip({
-      hostId: userId,
+      hostIds: [userId],
       title,
       description: "",
       destinations: [destination],

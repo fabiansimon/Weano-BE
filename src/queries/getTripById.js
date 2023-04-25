@@ -16,6 +16,7 @@ export const getTripById = async (_, { tripId }, { userId }) => {
 
   try {
     const trip = await Trip.findById(tripId);
+
     const images = await Image.find({
       _id: {
         $in: trip.images,
@@ -68,9 +69,10 @@ export const getTripById = async (_, { tripId }, { userId }) => {
       .where("creatorId")
       .equals(userId);
 
+    
     const {
       _id: id,
-      hostId,
+      hostIds,
       thumbnailUri,
       title,
       description,
@@ -93,7 +95,7 @@ export const getTripById = async (_, { tripId }, { userId }) => {
 
     return {
       id,
-      hostId,
+      hostIds,
       thumbnailUri,
       title,
       description,

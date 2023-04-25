@@ -1,6 +1,7 @@
 import { ApolloError, AuthenticationError } from "apollo-server-express";
 import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
+import TripController from "../controllers/TripController.js";
 
 export const removeUserFromTrip = async (_, args, { userId }) => {
   if (!userId) {
@@ -11,21 +12,29 @@ export const removeUserFromTrip = async (_, args, { userId }) => {
     const { id: removeUserId, tripId } = args.data;
 
     try {
-      const { hostId } = await Trip.findById(tripId);
+      const isHost = await TripController.isUserHost(userId, tripId);
 
-      if (hostId !== userId && removeUserId !== userId) {
+      if (!isHost && removeUserId !== userId) {
         throw new ApolloError("Must be host to proceed");
       }
 
-      const { activeMembers } = await Trip.findByIdAndUpdate(tripId, {
+      const { activeMembers, hostIds } = await Trip.findByIdAndUpdate(tripId, {
         $pull: { activeMembers: removeUserId },
       });
 
-      if (removeUserId === hostId) {
-        const newHost = activeMembers.find((member) => member !== removeUserId) || '';
-        await Trip.findByIdAndUpdate(tripId, { 
-          hostId: newHost
-        });
+      if (hostIds.includes(removeUserId)) {
+
+        if (hostIds.length <= 1 && activeMembers.length > 1) {
+          const newHost = activeMembers.find((member) => member !== removeUserId) || '';
+          await Trip.findByIdAndUpdate(tripId, { 
+            hostIds: [newHost]
+          });
+        } else {
+          const newHosts = hostIds.filter((host) => host !== removeUserId);
+          await Trip.findByIdAndUpdate(tripId, { 
+            hostIds: newHosts
+          });
+        }
       }
       
       await User.findByIdAndUpdate(removeUserId, {

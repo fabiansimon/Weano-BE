@@ -19,9 +19,10 @@ export const updateTrip = async (_, { trip }, { userId }) => {
       images,
       expenses,
       currency,
+      newHost,
     } = trip;
 
-    const {dateRange: currentRange} = await Trip.findById(tripId)
+    const {dateRange: currentRange, hostIds} = await Trip.findById(tripId)
 
     const type = TripController.getTripTypeFromDate(currentRange);
 
@@ -42,6 +43,11 @@ export const updateTrip = async (_, { trip }, { userId }) => {
     }
     if (destinations !== undefined) {
       updates.destinations = destinations;
+    }
+    if (newHost !== undefined) {
+      if (!hostIds.includes(newHost)) {
+        updates.hostIds = [...hostIds, newHost];
+      }
     }
     if (currency !== undefined) {
       updates.currency = currency;

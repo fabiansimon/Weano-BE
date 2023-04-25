@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const TripSchema = new mongoose.Schema(
   {
-    hostId: {
-      type: String,
+    hostIds: {
+      type: Array,
       required: true,
     },
     thumbnailUri: {
@@ -63,6 +63,10 @@ const TripSchema = new mongoose.Schema(
     packingItems: {
       type: Array,
     },
+    deleted: {
+      type: Boolean,
+      default: false,
+    }
   },
   {
     timestamps: true,
