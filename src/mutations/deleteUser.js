@@ -20,24 +20,26 @@ export const deleteUser = async (_, __, { userId }) => {
       //     }
       //   })
       //   .filter(Boolean);
-
       const tripData = await Trip.findByIdAndUpdate(trip, {
-        $pull: { activeMembers: { userId } },
+        $pull: { activeMembers: userId  },
       });
 
       if (!tripData) {
         return;
       }
 
-      const { _id, activeMembers, hostId } = tripData;
-
-      // Check if it was last user || if not reassign host
-      if (activeMembers.length <= 0) {
-        await Trip.findByIdAndDelete(_id.toString());
-      } else if (hostId === userId) {
+      const { activeMembers, hostIds } = tripData;
+      
+      if (hostIds.length <= 1 && hostIds[0] === userId) {
         await Trip.findByIdAndUpdate(trip, {
-          $set: { hostId: activeMembers[0] },
+           hostIds: [activeMembers[0]] 
         });
+      } 
+
+      if (hostIds.length > 1 && hostIds.includes(userId)) {
+        await Trip.findByIdAndUpdate(trip, {
+          $pull: { hostIds: userId },
+       });
       }
     });
 

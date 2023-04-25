@@ -2,6 +2,14 @@ import mongoose from "mongoose";
 
 const db = mongoose.connection;
 
+async function isUserHost(userId, tripId) {
+  const Trip = db.model('trip');
+
+  const { hostIds } = await Trip.findById(tripId);
+
+  return hostIds.includes(userId);
+}
+
 function getTripTypeFromDate(dateRange) {
   const { startDate, endDate } = dateRange;
   let now = new Date();
@@ -51,4 +59,5 @@ async function getFreeImagesForUser(tripId, userId) {
 export default {
   getTripTypeFromDate,
   getFreeImagesForUser,
+  isUserHost,
 };

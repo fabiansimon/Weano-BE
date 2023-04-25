@@ -134,7 +134,7 @@ async function getActiveChunkItems(chunk) {
   const now = (Date.now() / 1000).toFixed(0);
   for (const item of chunk) {
     const {
-      hostId,
+      hostIds,
       dateRange: { startDate, endDate },
       activeMembers,
     } = await Trips.findById(item.data.tripId);
@@ -144,7 +144,7 @@ async function getActiveChunkItems(chunk) {
         arr.push(item);
       }
 
-      if (DEBUG_ON && hostId === DEBUG_HOST_ID) {
+      if (DEBUG_ON && hostIds.includes(DEBUG_HOST_ID)) {
         arr.push(item);
       }
     }

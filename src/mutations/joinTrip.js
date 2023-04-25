@@ -13,6 +13,10 @@ export const joinTrip = async (_, { tripId }, { userId }) => {
 
     const trip = await Trip.findById(tripId);
 
+    if (trip.deleted) {
+      throw new ApolloError("Trip was deleted, please contact support for help.");
+    }
+
     const type = TripController.getTripTypeFromDate(trip.dateRange);
 
     if (type === "recent") {

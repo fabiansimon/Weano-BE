@@ -16,7 +16,6 @@ import { uploadTripImage } from "./src/mutations/uploadTripImage.js";
 import { voteForPoll } from "./src/mutations/voteForPoll.js";
 import { updateTask } from "./src/mutations/updateTask.js";
 import { getImagesFromTrip } from "./src/queries/getImagesFromTrip.js";
-import { getInvitationTripData } from "./src/queries/getInvitationTripData.js";
 import { getTripById } from "./src/queries/getTripById.js";
 import { getTripsForUser } from "./src/queries/getTripsForUser.js";
 import { getUserInitData } from "./src/queries/getUserInitData.js";
@@ -32,7 +31,6 @@ import { updatePackingItem } from "./src/mutations/UpdatePackingItem.js";
 const resolvers = {
   Query: {
     getTripById,
-    getInvitationTripData,
     getUserInitData,
     getImagesFromTrip,
     getTripsForUser,
