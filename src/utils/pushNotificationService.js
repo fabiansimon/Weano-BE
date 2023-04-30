@@ -59,10 +59,10 @@ export async function sendPushNotifications() {
         continue;
       }
 
-      if (!Expo.isExpoPushToken(token)) {
-        logError(`Push token ${token} is not a valid Expo push token`);
-        continue;
-      }
+      // if (!Expo.isExpoPushToken(token)) {
+      //   logError(`Push token ${token} is not a valid Expo push token`);
+      //   continue;
+      // }
 
       messages.push({
         to: token,
@@ -123,7 +123,7 @@ async function scheduleNotification(chunk, time, expo) {
     updateAssignedImages(filteredChunk);
     expo.sendPushNotificationsAsync(filteredChunk);
     logInfo(
-      "Current chunk sent out to " + filteredChunk.length + "users --" + time
+      "Current chunk sent out to " + filteredChunk.length + "users -- " + time
     );
   }, delay);
 }
