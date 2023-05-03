@@ -9,6 +9,8 @@ import twilio from "twilio";
 import nodemailer from "nodemailer";
 import { sendPushNotifications } from "./src/utils/pushNotificationService.js";
 import { logError, logInfo } from "./src/utils/logger.js";
+import config from 'config';
+
 dotenv.config();
 
 const startServer = async () => {
@@ -50,6 +52,7 @@ const startServer = async () => {
   mongoose.connect(db, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
+    dbName: config.get('database'),
   });
 
   console.log("Mongoose conntected");
