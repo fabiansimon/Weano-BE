@@ -9,13 +9,17 @@ import Document from "../models/Document.model.js";
 import TripController from "../controllers/TripController.js";
 import PackingItem from "../models/PackingItem.model.js";
 
-export const getTripById = async (_, { tripId }, { userId }) => {
+export const getTripById = async (_, { tripId, isInvitation }, { userId: {userId} }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }
 
   try {
     const trip = await Trip.findById(tripId);
+
+    if (!trip?.activeMembers?.includes(userId) && !isInvitation) {
+      throw new AuthenticationError("Not part of this trip");
+    }
 
     const images = await Image.find({
       _id: {

@@ -4,7 +4,7 @@ import Image from "../models/Image.model.js";
 import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
 
-export const getImagesFromTrip = async (_, { tripId }, { userId }) => {
+export const getImagesFromTrip = async (_, { tripId }, { userId: {userId} }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }

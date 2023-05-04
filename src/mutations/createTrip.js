@@ -2,7 +2,7 @@ import { ApolloError, AuthenticationError } from "apollo-server-express";
 import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
 
-export const createTrip = async (_, args, { userId }) => {
+export const createTrip = async (_, args, { userId: {userId} }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }

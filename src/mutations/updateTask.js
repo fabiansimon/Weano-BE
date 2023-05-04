@@ -1,7 +1,7 @@
 import { ApolloError, AuthenticationError } from "apollo-server-express";
 import Task from "../models/Task.model.js";
 
-export const updateTask = async (_, args, { userId }) => {
+export const updateTask = async (_, args, { userId: {userId} }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }

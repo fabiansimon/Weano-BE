@@ -2,7 +2,7 @@ import { ApolloError, AuthenticationError } from "apollo-server-express";
 import Poll from "../models/Poll.model.js";
 import Trip from "../models/Trip.model.js";
 
-export const deletePoll = async (_, args, { userId }) => {
+export const deletePoll = async (_, args, { userId: {userId} }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }

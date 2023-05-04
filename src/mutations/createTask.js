@@ -3,7 +3,7 @@ import Task from "../models/Task.model.js";
 import Trip from "../models/Trip.model.js";
 import TripController from "../controllers/TripController.js";
 
-export const createTask = async (_, args, { userId }) => {
+export const createTask = async (_, args, { userId: {userId} }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }

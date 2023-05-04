@@ -1,8 +1,14 @@
-import { ApolloError } from "apollo-server-express";
+import { ApolloError, AuthenticationError } from "apollo-server-express";
 import jwt from "jsonwebtoken";
 import User from "../models/User.model.js";
+import dotenv from "dotenv";
+dotenv.config();
 
-export const loginUser = async (_, { user }, { res }) => {
+export const loginUser = async (_, { user }, { appToken }) => {
+  if (!appToken || appToken !== process.env.APP_TOKEN) {
+    throw new AuthenticationError("Not authenticated");
+  }
+
   try {
     const { phoneNumber, googleIdToken } = user;
 
