@@ -3,7 +3,7 @@ import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
 import TripController from "../controllers/TripController.js";
 
-export const joinTrip = async (_, { tripId }, { userId }) => {
+export const joinTrip = async (_, { tripId }, { userId: {userId} }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }

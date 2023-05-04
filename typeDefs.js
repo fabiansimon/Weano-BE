@@ -174,7 +174,7 @@ const typeDefs = gql`
     getUserInitData: InitDataResponse
 
     # trip queries
-    getTripById(tripId: String): ConcatedTrip
+    getTripById(tripId: String, isInvitation: Boolean): ConcatedTrip
     getTripsForUser: [SimplifiedTrip]
     getImagesFromTrip(tripId: String): TripImagesResponse
   }

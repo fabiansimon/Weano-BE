@@ -4,7 +4,7 @@ import Poll from "../models/Poll.model.js";
 import Trip from "../models/Trip.model.js";
 import TripController from "../controllers/TripController.js";
 
-export const createPoll = async (_, args, { userId }) => {
+export const createPoll = async (_, args, { userId: {userId} }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }

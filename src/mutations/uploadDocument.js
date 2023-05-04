@@ -3,7 +3,7 @@ import Trip from "../models/Trip.model.js";
 import Document from "../models/Document.model.js";
 import TripController from "../controllers/TripController.js";
 
-export const uploadDocument = async (_, { document }, { userId }) => {
+export const uploadDocument = async (_, { document }, { userId: {userId} }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }

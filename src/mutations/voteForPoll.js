@@ -1,7 +1,7 @@
 import { ApolloError, AuthenticationError } from "apollo-server-express";
 import Poll from "../models/Poll.model.js";
 
-export const voteForPoll = async (_, args, { userId }) => {
+export const voteForPoll = async (_, args, { userId: {userId} }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }

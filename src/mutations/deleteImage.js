@@ -3,7 +3,7 @@ import Trip from "../models/Trip.model.js";
 import Image from "../models/Image.model.js";
 import User from "../models/User.model.js";
 
-export const deleteImage = async (_, args, { userId }) => {
+export const deleteImage = async (_, args, { userId: {userId} }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }

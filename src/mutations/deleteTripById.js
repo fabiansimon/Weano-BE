@@ -3,7 +3,7 @@ import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
 import TripController from "../controllers/TripController.js";
 
-export const deleteTripById = async (_, { tripId }, { userId }) => {
+export const deleteTripById = async (_, { tripId }, { userId: {userId} }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }

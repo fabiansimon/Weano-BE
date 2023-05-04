@@ -2,7 +2,7 @@ import { ApolloError, AuthenticationError } from "apollo-server-express";
 import Trip from "../models/Trip.model.js";
 import TripController from "../controllers/TripController.js";
 
-export const updateTrip = async (_, { trip }, { userId }) => {
+export const updateTrip = async (_, { trip }, { userId: {userId} }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }
@@ -22,7 +22,11 @@ export const updateTrip = async (_, { trip }, { userId }) => {
       newHost,
     } = trip;
 
-    const {dateRange: currentRange, hostIds} = await Trip.findById(tripId)
+    const { dateRange: currentRange, hostIds, activeMembers: members } = await Trip.findById(tripId)
+    
+    if (!members?.includes(userId)) {
+      throw new AuthenticationError("Not part of this trip");
+    }
 
     const type = TripController.getTripTypeFromDate(currentRange);
 

@@ -22,14 +22,21 @@ const startServer = async () => {
     // Check if request was authorized
     context: ({ req }) => {
       const token = req.headers.authorization || "";
+      const appToken = req.headers['app-token'] || "";
 
       if (token === "") {
-        return null;
+        return {
+          userId: null,
+          appToken: appToken
+        };
       }
 
       try {
         const data = jwt.verify(token, process.env.JWT_SECRET);
-        return data;
+        return {
+          userId: data,
+          appToken,
+        };
       } catch (error) {
         throw new AuthenticationError(error);
       }

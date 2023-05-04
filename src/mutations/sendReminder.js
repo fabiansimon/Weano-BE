@@ -6,7 +6,7 @@ import { logError, logInfo } from "../utils/logger.js";
 dotenv.config();
 
 let expo = new Expo({ accessToken: process.env.EXPO_TOKEN });
-export const sendReminder = async (_, args, { userId }) => {
+export const sendReminder = async (_, args, { userId: {userId} }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }
