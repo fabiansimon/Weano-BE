@@ -8,16 +8,21 @@ import mongoose from "mongoose";
 import twilio from "twilio";
 import nodemailer from "nodemailer";
 import { sendPushNotifications } from "./src/utils/pushNotificationService.js";
+import { ApolloServerPluginLandingPageDisabled } from 'apollo-server-core';
 import { logError, logInfo } from "./src/utils/logger.js";
 import config from 'config';
 
 dotenv.config();
+
+const ENVIRONMENT = config.get('database')
+const PORT = ENVIRONMENT === 'production' ? process.env.PROD_PORT : process.env.DEV_PORT;
 
 const startServer = async () => {
   // Create new ApolloServer with imported typeDefs and resolvers
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    plugins: ENVIRONMENT === 'production' ? [ApolloServerPluginLandingPageDisabled()] : [],
 
     // Check if request was authorized
     context: ({ req }) => {
@@ -59,7 +64,7 @@ const startServer = async () => {
   mongoose.connect(db, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
-    dbName: config.get('database'),
+    dbName: ENVIRONMENT,
   });
 
   console.log("Mongoose conntected");
@@ -180,9 +185,9 @@ const startServer = async () => {
 
   planPushNotificationServer();
 
-  app.listen(process.env.PORT, () =>
+  app.listen(PORT, () =>
     console.log(
-      `🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`
+      `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
     )
   );
 };
