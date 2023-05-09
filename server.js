@@ -20,10 +20,6 @@ dotenv.config();
 const ENVIRONMENT = config.get('database')
 const PORT = ENVIRONMENT === 'production' ? process.env.PROD_PORT : process.env.DEV_PORT;
 
-// const key = fs.readFileSync('selfsigned.key');
-// const cert = fs.readFileSync('selfsigned.crt');
-
-
 const startServer = async () => {
   // Create new ApolloServer with imported typeDefs and resolvers
   const server = new ApolloServer({
@@ -198,13 +194,12 @@ const startServer = async () => {
   //   )
   // );
 
-  const httpServer = http.createServer(app);
+  // const httpServer = http.createServer(app);
   const httpsServer = https.createServer({
-    key,
-    cert,
-  }, app)
+    key: fs.readFileSync("key.pem"),
+    cert: fs.readFileSync("cert.pem"),
+  }, app);
 
-  httpServer.listen(80);
   httpsServer.listen(443);
 };
 
