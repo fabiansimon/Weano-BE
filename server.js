@@ -11,6 +11,7 @@ import { sendPushNotifications } from "./src/utils/pushNotificationService.js";
 import { ApolloServerPluginLandingPageDisabled } from 'apollo-server-core';
 import { logError, logInfo } from "./src/utils/logger.js";
 import config from 'config';
+import fs from 'fs';
 import http from "http";
 import https from "https";
 
@@ -18,6 +19,10 @@ dotenv.config();
 
 const ENVIRONMENT = config.get('database')
 const PORT = ENVIRONMENT === 'production' ? process.env.PROD_PORT : process.env.DEV_PORT;
+
+const key = fs.readFileSync('certs/selfsigned.key');
+const cert = fs.readFileSync('certs/selfsigned.crt');
+
 
 const startServer = async () => {
   // Create new ApolloServer with imported typeDefs and resolvers
@@ -187,11 +192,20 @@ const startServer = async () => {
 
   planPushNotificationServer();
 
-  app.listen(PORT, () =>
-    console.log(
-      `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
-    )
-  );
+  // app.listen(PORT, () =>
+  //   console.log(
+  //     `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
+  //   )
+  // );
+
+  const httpServer = http.createServer(app);
+  const httpsServer = https.createServer({
+    key,
+    cert,
+  }, app)
+
+  httpServer.listen(8080);
+  httpsServer.listen(8443);
 };
 
 const planPushNotificationServer = () => {
