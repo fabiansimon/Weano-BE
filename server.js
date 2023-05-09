@@ -20,8 +20,8 @@ dotenv.config();
 const ENVIRONMENT = config.get('database')
 const PORT = ENVIRONMENT === 'production' ? process.env.PROD_PORT : process.env.DEV_PORT;
 
-const key = fs.readFileSync('certs/selfsigned.key');
-const cert = fs.readFileSync('certs/selfsigned.crt');
+// const key = fs.readFileSync('selfsigned.key');
+// const cert = fs.readFileSync('selfsigned.crt');
 
 
 const startServer = async () => {
@@ -204,8 +204,8 @@ const startServer = async () => {
     cert,
   }, app)
 
-  httpServer.listen(8080);
-  httpsServer.listen(8443);
+  httpServer.listen(80);
+  httpsServer.listen(443);
 };
 
 const planPushNotificationServer = () => {
