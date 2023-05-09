@@ -194,13 +194,15 @@ const startServer = async () => {
   //   )
   // );
 
-  // const httpServer = http.createServer(app);
-  const httpsServer = https.createServer({
-    key: fs.readFileSync("key.pem"),
-    cert: fs.readFileSync("cert.pem"),
-  }, app);
+  // const httpsServer = https.createServer({
+  //   key: fs.readFileSync("key.pem"),
+  //   cert: fs.readFileSync("cert.pem"),
+  // }, app);
 
-  httpsServer.listen(443);
+  // httpsServer.listen(443);
+
+  const httpServer = http.createServer(app);
+  httpServer.listen(PORT);
 };
 
 const planPushNotificationServer = () => {
