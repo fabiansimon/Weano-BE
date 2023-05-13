@@ -2,12 +2,16 @@ import mongoose from "mongoose";
 
 const db = mongoose.connection;
 
-async function isExistingUser(phoneNumber, email, googleId) {
+async function isExistingUser(phoneNumber, email, googleId, appleId) {
   const User = db.model("user");
 
     let res;
     if (googleId) {
         res = await User.find({ $or: [{ googleId }] });
+    }
+
+    if (appleId) {
+        res = await User.find({ $or: [{ appleId }] });
     }
 
     if (email && phoneNumber) {
