@@ -8,6 +8,9 @@ const UserSchema = new mongoose.Schema(
     googleId: {
       type: String
     },
+    appleId: {
+      type: String
+    },
     email: {
       type: String,
       required: true,
