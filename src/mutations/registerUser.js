@@ -15,9 +15,7 @@ export const registerUser =async (_, { user }, { appToken }) => {
     const { phoneNumber, email, firstName, lastName, googleIdToken, appleIdToken } = user;
 
     if (appleIdToken) {
-      const { header: { kid }, payload: { sub: appleId } } = jwt.decode(appleIdToken, { complete: true });
-
-      console.log(appleId)
+      const { header: { kid }, payload: { sub: appleId, email: appleEmail } } = jwt.decode(appleIdToken, { complete: true });
 
       const res = await fetch('https://appleid.apple.com/auth/keys');
 
@@ -45,7 +43,7 @@ export const registerUser =async (_, { user }, { appToken }) => {
         return accessToken;
       }
       
-      const _user = new User({ email, firstName, lastName, appleId, })
+      const _user = new User({ email: appleEmail, firstName: firstName || 'John', lastName: lastName || 'Doe', appleId, })
       await _user.save();
 
       const accessToken = jwt.sign({ userId: _user.id }, process.env.JWT_SECRET, {
