@@ -218,6 +218,7 @@ const typeDefs = gql`
     title: String
     description: String
     tripId: String!
+    s3Key: String
   }
 
   input UserInput {
@@ -312,6 +313,7 @@ const typeDefs = gql`
     uri: String!
     tripId: String!
     title: String!
+    s3Key: String
   }
 
   input PackingItemInput {

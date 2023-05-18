@@ -10,7 +10,7 @@ export const uploadTripImage = async (_, { image }, { userId: {userId} }) => {
   }
 
   try {
-    const { title, description, uri, tripId } = image;
+    const { title, description, uri, tripId, s3Key } = image;
 
     const { dateRange } = await Trip.findById(tripId);
 
@@ -35,6 +35,7 @@ export const uploadTripImage = async (_, { image }, { userId: {userId} }) => {
       uri,
       author: userId,
       tripId,
+      s3Key: s3Key || '',
     });
 
     const {
