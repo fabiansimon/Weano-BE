@@ -1,6 +1,7 @@
 import { ApolloError, AuthenticationError } from "apollo-server-express";
 import Trip from "../models/Trip.model.js";
 import Document from "../models/Document.model.js";
+import TripController from "../controllers/TripController.js";
 
 export const deleteDocument = async (_, args, { userId: {userId} }) => {
   if (!userId) {
@@ -11,11 +12,12 @@ export const deleteDocument = async (_, args, { userId: {userId} }) => {
     const { id, tripId } = args.data;
 
     try {
-      const document = await Document.findById(id);
-      const { creatorId } = document;
+      const {creatorId, s3Key} = await Document.findById(id);
+
+      await TripController.deleteBucketItem(s3Key);  
 
       if (creatorId !== userId) {
-        return;
+        throw new AuthenticationError("Not part of this trip");
       }
 
       await Document.findByIdAndDelete(id);

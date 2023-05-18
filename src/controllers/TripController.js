@@ -1,4 +1,9 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+import aws from 'aws-sdk'
+
+dotenv.config();
 
 const db = mongoose.connection;
 
@@ -56,8 +61,27 @@ async function getFreeImagesForUser(tripId, userId) {
   return userFreeImages;
 }
 
+async function deleteBucketItem(path) {
+  const s3 = new aws.S3({
+    accessKeyId: process.env.ACCESS_KEY_ID,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+  });
+
+  const params = {
+    Bucket: process.env.S3_BUCKET, 
+    Key: path,
+  };
+
+  s3.deleteObject(params, function (err, data) {
+    if (err) console.log(err, err.stack);
+    console.log(data);
+  });
+
+}
+
 export default {
   getTripTypeFromDate,
   getFreeImagesForUser,
   isUserHost,
+  deleteBucketItem,
 };

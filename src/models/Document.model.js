@@ -22,6 +22,9 @@ const DocumentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    s3Key: {
+      type: String
+    }
   },
   {
     timestamps: true,

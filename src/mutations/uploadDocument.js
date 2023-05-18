@@ -9,7 +9,7 @@ export const uploadDocument = async (_, { document }, { userId: {userId} }) => {
   }
 
   try {
-    const { uri, type, title, tripId } = document;
+    const { uri, type, title, tripId, s3Key } = document;
 
     const { dateRange } = await Trip.findById(tripId);
 
@@ -25,6 +25,7 @@ export const uploadDocument = async (_, { document }, { userId: {userId} }) => {
       tripId,
       title,
       type,
+      s3Key: s3Key || '',
     });
 
     await Trip.findByIdAndUpdate(tripId, {
