@@ -26,6 +26,7 @@ const startServer = async () => {
     typeDefs,
     resolvers,
     plugins: ENVIRONMENT === 'production' ? [ApolloServerPluginLandingPageDisabled()] : [],
+    cache: 'bounded',
 
     // Check if request was authorized
     context: ({ req }) => {
