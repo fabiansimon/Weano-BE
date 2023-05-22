@@ -21,6 +21,11 @@ const ExpenseSchema = new mongoose.Schema(
     paidBy: {
       type: String,
     },
+    category: {
+      type: String,
+      enum: ['accomodation', 'transport', 'activites', 'food', 'other'],
+      default: 'other'
+    }
   },
   {
     timestamps: true,
