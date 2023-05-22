@@ -131,6 +131,7 @@ const typeDefs = gql`
     currency: String
     createdAt: String
     paidBy: String
+    category: String
   }
 
   type TripImagesResponse {
@@ -237,6 +238,7 @@ const typeDefs = gql`
     tripId: String!
     currency: String
     paidBy: String
+    category: String
   }
 
   input PollInput {
