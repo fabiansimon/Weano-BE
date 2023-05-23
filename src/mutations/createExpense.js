@@ -10,7 +10,7 @@ export const createExpense = async (_, args, { userId: {userId} }) => {
   }
 
   try {
-    const { title, amount, currency, tripId, paidBy, category } = args.expense;
+    const { title, amount, currency, tripId, paidBy, category, splitBy } = args.expense;
     
     // const { dateRange } = await Trip.findById(tripId);
 
@@ -26,7 +26,8 @@ export const createExpense = async (_, args, { userId: {userId} }) => {
       amount,
       currency: currency || "$",
       paidBy: paidBy || userId,
-      category: category || 'other',
+      category: category || 'other',
+      splitBy: splitBy || [],
     });
 
     const { _id } = await expense.save();

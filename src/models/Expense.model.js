@@ -21,6 +21,9 @@ const ExpenseSchema = new mongoose.Schema(
     paidBy: {
       type: String,
     },
+    splitBy: {
+      type: Array
+    },
     category: {
       type: String,
       enum: ['accomodation', 'transport', 'activites', 'food', 'other'],

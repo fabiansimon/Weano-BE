@@ -132,6 +132,7 @@ const typeDefs = gql`
     createdAt: String
     paidBy: String
     category: String
+    splitBy: [String]
   }
 
   type TripImagesResponse {
@@ -235,10 +236,12 @@ const typeDefs = gql`
   input ExpenseInput {
     title: String!
     amount: Float!
-    tripId: String!
+    tripId: String
     currency: String
     paidBy: String
     category: String
+    splitBy: [String]
+    id: String
   }
 
   input PollInput {
@@ -344,6 +347,7 @@ const typeDefs = gql`
 
     # Expenses
     createExpense(expense: ExpenseInput!): String
+    updateExpense(expense: ExpenseInput!): Boolean
     deleteExpense(data: DeleteInput!): Boolean
 
     # Polls
