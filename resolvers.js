@@ -27,6 +27,7 @@ import { deleteDocument } from "./src/mutations/deleteDocument.js";
 import { createPackingList } from "./src/mutations/createPackingList.js";
 import { deletePackingItem } from "./src/mutations/deletePackingItem.js";
 import { updatePackingItem } from "./src/mutations/UpdatePackingItem.js";
+import { updateExpense } from "./src/mutations/updateExpense.js";
 
 const resolvers = {
   Query: {
@@ -48,6 +49,7 @@ const resolvers = {
     joinTrip,
     createExpense,
     deleteExpense,
+    updateExpense,
     deletePoll,
     deleteTask,
     voteForPoll,
