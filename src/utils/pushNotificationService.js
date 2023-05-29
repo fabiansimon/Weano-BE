@@ -137,9 +137,10 @@ async function getActiveChunkItems(chunk) {
       hostIds,
       dateRange: { startDate, endDate },
       activeMembers,
+      deleted
     } = await Trips.findById(item.data.tripId);
 
-    if (startDate < now && endDate > now && activeMembers.length > 0) {
+    if (startDate < now && endDate > now && activeMembers.length > 0 && !deleted) {
       if (!DEBUG_ON) {
         arr.push(item);
       }
