@@ -63,6 +63,9 @@ const TripSchema = new mongoose.Schema(
     packingItems: {
       type: Array,
     },
+    chatRoomId: {
+      type: String,
+    },
     deleted: {
       type: Boolean,
       default: false,

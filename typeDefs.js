@@ -91,6 +91,7 @@ const typeDefs = gql`
     type: String
     userFreeImages: Int
     currency: Currency
+    chatRoomId: String
   }
 
   type Currency {
@@ -279,6 +280,7 @@ const typeDefs = gql`
     dateRange: DateRangeInput
     currency: CurrencyInput
     newHost: String
+    chatRoomId: String
     # activeMembers
     # images
     # expenses
