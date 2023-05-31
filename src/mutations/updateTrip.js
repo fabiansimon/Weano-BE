@@ -20,6 +20,7 @@ export const updateTrip = async (_, { trip }, { userId: {userId} }) => {
       expenses,
       currency,
       newHost,
+      chatRoomId,
     } = trip;
 
     const { dateRange: currentRange, hostIds, activeMembers: members } = await Trip.findById(tripId)
@@ -67,6 +68,9 @@ export const updateTrip = async (_, { trip }, { userId: {userId} }) => {
     }
     if (expenses !== undefined) {
       updates.expenses = expenses;
+    }
+    if (chatRoomId !== undefined) {
+      updates.chatRoomId = chatRoomId;
     }
 
     await Trip.findByIdAndUpdate(tripId, updates, { new: true });

@@ -16,9 +16,9 @@ export const deleteDocument = async (_, args, { userId: {userId} }) => {
 
       await TripController.deleteBucketItem(s3Key);  
 
-      if (creatorId !== userId) {
-        throw new AuthenticationError("Not part of this trip");
-      }
+      // if (creatorId !== userId ||) {
+      //   throw new AuthenticationError("Cannot delete this item");
+      // }
 
       await Document.findByIdAndDelete(id);
 
