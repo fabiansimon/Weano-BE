@@ -9,13 +9,17 @@ import Task from "../models/Task.model.js";
 import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
 
-export const getUserInitData = async (_, __, { userId: {userId} }) => {
+export const getUserInitData = async (_, __, { userId: { userId } }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }
 
   try {
     const userData = await User.findById(userId);
+    
+    if (!userData) {
+      throw new ApolloError("Invalid token");
+    }
 
     const trips = await Trip.find({
       _id: {
