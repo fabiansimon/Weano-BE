@@ -20,6 +20,10 @@ const ImageScheme = new mongoose.Schema(
       type: String,
       required: true,
     },
+    timestamp: {
+      type: Number,
+      
+    },
     s3Key: {
       type: String
     }
