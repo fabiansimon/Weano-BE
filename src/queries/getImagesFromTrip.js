@@ -43,6 +43,12 @@ export const getImagesFromTrip = async (_, { tripId }, { userId: {userId} }) => 
       };
     });
 
+    images = images.sort((a, b) => {
+      const timestampA = a.timestamp || (a.createdAt / 1000);
+      const timestampB = b.timestamp || (b.createdAt / 1000);
+      if (timestampA < timestampB) return -1;
+    })
+
     return {
       images,
       userFreeImages,
