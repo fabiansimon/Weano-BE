@@ -36,7 +36,7 @@ export const uploadTripImage = async (_, { image }, { userId: { userId } }) => {
       author: userId,
       tripId,
       s3Key: s3Key || '',
-      timestamp: timestamp || new Date() / 1000,
+      timestamp: timestamp || parseInt(new Date() / 1000),
     });
 
     const {
