@@ -4,13 +4,13 @@ import Image from "../models/Image.model.js";
 import Trip from "../models/Trip.model.js";
 import User from "../models/User.model.js";
 
-export const uploadTripImage = async (_, { image }, { userId: {userId} }) => {
+export const uploadTripImage = async (_, { image }, { userId: { userId } }) => {
   if (!userId) {
     throw new AuthenticationError("Not authenticated");
   }
 
   try {
-    const { title, description, uri, tripId, s3Key } = image;
+    const { title, description, uri, tripId, s3Key, timestamp } = image;
 
     const { dateRange } = await Trip.findById(tripId);
 
@@ -36,6 +36,7 @@ export const uploadTripImage = async (_, { image }, { userId: {userId} }) => {
       author: userId,
       tripId,
       s3Key: s3Key || '',
+      timestamp: timestamp || new Date() / 1000,
     });
 
     const {
@@ -46,6 +47,7 @@ export const uploadTripImage = async (_, { image }, { userId: {userId} }) => {
     } = await User.findByIdAndUpdate(userId, {
       $push: { images: _image.id },
     });
+
     await Trip.findByIdAndUpdate(tripId, { $push: { images: _image.id } });
 
     const {

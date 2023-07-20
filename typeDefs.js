@@ -149,7 +149,9 @@ const typeDefs = gql`
     description: String
     author: Author
     userFreeImages: Int
+    timestamp: Int
   }
+  
   type Author {
     _id: String
     firstName: String
@@ -222,6 +224,7 @@ const typeDefs = gql`
     description: String
     tripId: String!
     s3Key: String
+    timestamp: Int
   }
 
   input UserInput {
