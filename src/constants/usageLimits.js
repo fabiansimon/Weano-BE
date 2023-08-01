@@ -6,7 +6,7 @@ const FREE_TIER_LIMITS = {
   travelers: 10,
   images: 30,
   totalTrips: 3,
-  packingItems: 10,
+  packingItems: 50,
 };
 const PREMIUM_TIER_LIMITS = {
   documents: 30,
