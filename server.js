@@ -11,9 +11,9 @@ import { sendPushNotifications } from "./src/utils/pushNotificationService.js";
 import { ApolloServerPluginLandingPageDisabled } from 'apollo-server-core';
 import { logError, logInfo } from "./src/utils/logger.js";
 import config from 'config';
-import fs from 'fs';
 import http from "http";
-import https from "https";
+import { generateVideo } from "./src/utils/videoGenerator.js";
+import fs from "fs";
 
 dotenv.config();
 
@@ -134,6 +134,12 @@ const startServer = async () => {
 
   app.get("/redirect/:operation/:tripId", async (req, res) => {
     const { operation, tripId } = req.params;
+    const appToken = req.headers["app-token"];
+
+    if (!appToken || appToken !== process.env.APP_TOKEN) {
+      logError("Unauthorized call: " + JSON.stringify(req.headers));
+      return res.sendStatus(401);
+    }
 
     try {
       return res.send(
@@ -145,6 +151,37 @@ const startServer = async () => {
     } catch (error) {
       res.json(error);
     }
+  });
+
+  app.get("/generate-video/:tripId", async (req, res) => {
+    const { tripId } = req.params;
+
+    if (ENVIRONMENT === 'production') {
+      const appToken = req.headers["app-token"];
+
+      if (!appToken || appToken !== process.env.APP_TOKEN) {
+        logError("Unauthorized call: " + JSON.stringify(req.headers));
+        return res.sendStatus(401);
+      }
+    }
+
+    const output = await generateVideo(tripId);
+    console.log("output", output)
+
+    setTimeout(() => {
+      // Set the Content-Disposition header to suggest a download with a specific filename
+      res.setHeader('Content-Disposition', `attachment; filename="${output}"`);
+
+      // Stream the video file to the response
+      const stream = fs.createReadStream(output);
+      stream.pipe(res);
+
+      // Handle any errors
+      stream.on('error', (error) => {
+        console.error('Error streaming video:', error);
+        res.status(500).send('Internal Server Error');
+      });
+    }, 1000);
   });
 
   app.get("/invite/:receivers/:tripId", async (req, res) => {
@@ -188,19 +225,6 @@ const startServer = async () => {
   });
 
   planPushNotificationServer();
-
-  // app.listen(PORT, () =>
-  //   console.log(
-  //     `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
-  //   )
-  // );
-
-  // const httpsServer = https.createServer({
-  //   key: fs.readFileSync("key.pem"),
-  //   cert: fs.readFileSync("cert.pem"),
-  // }, app);
-
-  // httpsServer.listen(443);
 
   const httpServer = http.createServer(app);
   httpServer.listen(PORT);
