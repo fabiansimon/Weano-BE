@@ -1,12 +1,12 @@
 const FREE_TIER_LIMITS = {
   documents: 5,
-  expenses: 50,
+  expenses: 100,
   checklist: 20,
   polls: 10,
   travelers: 10,
   images: 30,
   totalTrips: 3,
-  packingItems: 10,
+  packingItems: 50,
 };
 const PREMIUM_TIER_LIMITS = {
   documents: 30,

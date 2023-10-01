@@ -23,16 +23,10 @@ export const updateTrip = async (_, { trip }, { userId: {userId} }) => {
       chatRoomId,
     } = trip;
 
-    const { dateRange: currentRange, hostIds, activeMembers: members } = await Trip.findById(tripId)
+    const { hostIds, activeMembers: members } = await Trip.findById(tripId)
     
     if (!members?.includes(userId)) {
       throw new AuthenticationError("Not part of this trip");
-    }
-
-    const type = TripController.getTripTypeFromDate(currentRange);
-
-    if (type === "recent") {
-      throw new ApolloError("Can't update the trip after the it's done");
     }
 
     const updates = {};

@@ -25,16 +25,11 @@ export const getImagesFromTrip = async (_, { tripId }, { userId: {userId} }) => 
         $in: authorsArr,
       },
     });
-
-    const type = TripController.getTripTypeFromDate(dateRange);
-
-    let userFreeImages = 0;
-    if (type === "active") {
-      userFreeImages = await TripController.getFreeImagesForUser(
-        tripId,
-        userId
-      );
-    }
+ 
+    const userFreeImages = await TripController.getFreeImagesForUser(
+      tripId,
+      userId
+    );
 
     images = images.map((image) => {
       return {
@@ -44,8 +39,8 @@ export const getImagesFromTrip = async (_, { tripId }, { userId: {userId} }) => 
     });
 
     images = images.sort((a, b) => {
-      const timestampA = a.timestamp || (a.createdAt / 1000);
-      const timestampB = b.timestamp || (b.createdAt / 1000);
+      const timestampA = a.timestamp || parseInt(a.createdAt / 1000);
+      const timestampB = b.timestamp || parseInt(b.createdAt / 1000);
       if (timestampA < timestampB) return -1;
     })
 

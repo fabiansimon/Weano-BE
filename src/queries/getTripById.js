@@ -87,16 +87,11 @@ export const getTripById = async (_, { tripId, isInvitation }, { userId: {userId
     } = trip;
 
     const type = TripController.getTripTypeFromDate(dateRange);
-
-    let userFreeImages;
-    if (type === "active") {
-      userFreeImages = await TripController.getFreeImagesForUser(
-        tripId,
-        userId
-      );
-    } else {
-      userFreeImages = 0;
-    }
+ 
+    const userFreeImages = await TripController.getFreeImagesForUser(
+      tripId,
+      userId
+    );
 
     return {
       id,

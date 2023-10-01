@@ -37,7 +37,7 @@ export const registerUser =async (_, { user }, { appToken }) => {
         }
   
         const accessToken = jwt.sign({ userId: _user.id }, process.env.JWT_SECRET, {
-          expiresIn: "7d",
+          expiresIn: "365d",
         });
   
         return accessToken;
@@ -47,7 +47,7 @@ export const registerUser =async (_, { user }, { appToken }) => {
       await _user.save();
 
       const accessToken = jwt.sign({ userId: _user.id }, process.env.JWT_SECRET, {
-        expiresIn: "7d",
+        expiresIn: "365d",
       });
 
       return accessToken;
@@ -70,7 +70,7 @@ export const registerUser =async (_, { user }, { appToken }) => {
       await _user.save();
 
       const accessToken = jwt.sign({ userId: _user.id }, process.env.JWT_SECRET, {
-        expiresIn: "7d",
+        expiresIn: "365d",
       });
 
       return accessToken;
@@ -84,7 +84,7 @@ export const registerUser =async (_, { user }, { appToken }) => {
     await _user.save();
 
     const accessToken = jwt.sign({ userId: _user.id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
+      expiresIn: "365d",
     });
     return accessToken;
   } catch (error) {

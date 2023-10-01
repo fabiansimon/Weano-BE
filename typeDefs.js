@@ -174,7 +174,6 @@ const typeDefs = gql`
   type Query {
     # user queries
     me: User
-    getAllUsers: [User]
     getUserById(id: ID): User
     getUserInitData: InitDataResponse
 
@@ -182,6 +181,9 @@ const typeDefs = gql`
     getTripById(tripId: String, isInvitation: Boolean): ConcatedTrip
     getTripsForUser: [SimplifiedTrip]
     getImagesFromTrip(tripId: String): TripImagesResponse
+
+    # pure dashboard calls
+    getUsers(limit: Int): [User]
   }
 
   input DateRangeInput {
