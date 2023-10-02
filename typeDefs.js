@@ -170,6 +170,15 @@ const typeDefs = gql`
     amount: Int!
     isPacked: Boolean
   }
+  
+  type Trip {
+    id: ID
+    hostIds: [String]
+    thumbnailUri: String
+    title: String
+    description: String
+    activeMembers: [String]
+  }
 
   type Query {
     # user queries
@@ -184,6 +193,7 @@ const typeDefs = gql`
 
     # pure dashboard calls
     getUsers(limit: Int): [User]
+    getTrips(limit: Int): [Trip]
   }
 
   input DateRangeInput {

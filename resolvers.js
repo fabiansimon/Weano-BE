@@ -19,6 +19,7 @@ import { getImagesFromTrip } from "./src/queries/getImagesFromTrip.js";
 import { getTripById } from "./src/queries/getTripById.js";
 import { getTripsForUser } from "./src/queries/getTripsForUser.js";
 import { getUsers } from "./src/queries/getUsers.js";
+import { getTrips } from "./src/queries/getTrips.js";
 import { getUserInitData } from "./src/queries/getUserInitData.js";
 import { removeUserFromTrip } from "./src/mutations/removeUserFromTrip.js";
 import { sendReminder } from "./src/mutations/sendReminder.js";
@@ -37,6 +38,7 @@ const resolvers = {
     getImagesFromTrip,
     getTripsForUser,
     getUsers,
+    getTrips,
   },
 
   Mutation: {
