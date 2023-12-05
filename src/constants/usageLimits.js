@@ -5,7 +5,7 @@ const FREE_TIER_LIMITS = {
   polls: 10,
   travelers: 10,
   images: 30,
-  totalTrips: 3,
+  totalTrips: 5,
   packingItems: 50,
 };
 const PREMIUM_TIER_LIMITS = {
