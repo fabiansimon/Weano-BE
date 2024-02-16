@@ -11,19 +11,23 @@ export const createExpense = async (_, args, { userId: {userId} }) => {
 
   try {
     const { title, amount, currency, tripId, paidBy, category, splitBy } = args.expense;
+
+    if (args?.expense?.squashedExpenses) {
+      const ids = args.expense.squashedExpenses;
+
+      for (const id of ids) {
+        await Expense.findByIdAndDelete(id);
+      }
+      
+      await Trip.findByIdAndUpdate(tripId, {
+        $pullAll: { expenses: ids },
+      });
+    }
     
-    // const { dateRange } = await Trip.findById(tripId);
-
-    // const type = TripController.getTripTypeFromDate(dateRange);
-
-    // if (type === "recent") {
-    //   throw new ApolloError("Can't create an expense after the trip is done");
-    // }
-
     const expense = new Expense({
       creatorId: userId,
       title,
-      amount,
+      amount: amount.toFixed(2),
       currency: currency || "$",
       paidBy: paidBy || userId,
       category: category || 'other',

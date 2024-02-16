@@ -83,9 +83,10 @@ export const getTripById = async (_, { tripId, isInvitation }, { userId: {userId
       destinations,
       dateRange,
       currency,
-      chatRoomId
+      chatRoomId,
+      budget
     } = trip;
-
+    
     const type = TripController.getTripTypeFromDate(dateRange);
  
     const userFreeImages = await TripController.getFreeImagesForUser(
@@ -112,7 +113,8 @@ export const getTripById = async (_, { tripId, isInvitation }, { userId: {userId
       type,
       userFreeImages,
       currency,
-      chatRoomId
+      chatRoomId,
+      budget
     };
   } catch (error) {
     throw new ApolloError(error);

@@ -6,7 +6,7 @@ export const updateExpense = async (_, { expense }, { userId: {userId} }) => {
     throw new AuthenticationError("Not authenticated");
   }
 
-    try {
+  try {
     const { title, amount, currency, paidBy, splitBy, category, id } = expense;
 
     const updates = {};
@@ -15,7 +15,7 @@ export const updateExpense = async (_, { expense }, { userId: {userId} }) => {
       updates.title = title;
     }
     if (amount !== undefined) {
-      updates.amount = amount;
+      updates.amount = amount.toFixed(2);
     }
     if (currency !== undefined) {
       updates.currency = currency;

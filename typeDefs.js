@@ -92,6 +92,7 @@ const typeDefs = gql`
     userFreeImages: Int
     currency: Currency
     chatRoomId: String
+    budget: Float
   }
 
   type Currency {
@@ -131,6 +132,7 @@ const typeDefs = gql`
     amount: Float
     currency: String
     createdAt: String
+    updatedAt: String
     paidBy: String
     category: String
     splitBy: [String]
@@ -250,7 +252,7 @@ const typeDefs = gql`
   }
 
   input ExpenseInput {
-    title: String!
+    title: String
     amount: Float!
     tripId: String
     currency: String
@@ -258,6 +260,7 @@ const typeDefs = gql`
     category: String
     splitBy: [String]
     id: String
+    squashedExpenses: [String]
   }
 
   input PollInput {

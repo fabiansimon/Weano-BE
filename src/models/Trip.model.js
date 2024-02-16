@@ -69,6 +69,9 @@ const TripSchema = new mongoose.Schema(
     deleted: {
       type: Boolean,
       default: false,
+    },
+    budget: {
+      type: Number,
     }
   },
   {

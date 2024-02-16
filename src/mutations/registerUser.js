@@ -11,6 +11,7 @@ export const registerUser =async (_, { user }, { appToken }) => {
   if (!appToken || appToken !== process.env.APP_TOKEN) {
     throw new AuthenticationError("Not authenticated");
   }
+  
   try {
     const { phoneNumber, email, firstName, lastName, googleIdToken, appleIdToken } = user;
 

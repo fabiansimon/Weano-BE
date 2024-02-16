@@ -1,6 +1,6 @@
 const FREE_TIER_LIMITS = {
   documents: 5,
-  expenses: 100,
+  expenses: 120,
   checklist: 20,
   polls: 10,
   travelers: 10,
